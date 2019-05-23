@@ -1,0 +1,15 @@
+{
+  "name": "datingapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run open && npm run watch",
+    "watch": "dotnet watch --project ./DatingApp.API/ run",
+    "open": "start http://localhost:5000/api",
+    "ef:migration-add": "cd ./DatingApp.API/ && dotnet ef migrations add",
+    "ef:update": "cd ./DatingApp.API/ && dotnet ef database update"
+  },
+  "author": "",
+  "license": "ISC"
+}
