@@ -36,7 +36,7 @@ namespace DatingApp.API
         {
             //to inject entity framework core
             services.AddDbContext<DataContext>(option =>
-                option.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
             //to inject mvc
