@@ -8,6 +8,7 @@
     "watch": "dotnet watch --project ./DatingApp.API/ run",
     "open": "start http://localhost:5000/api",
     "ef:migration-add": "cd ./DatingApp.API/ && dotnet ef migrations add",
+    "ef:migration-script": "cd ./DatingApp.API/ && dotnet ef migrations script",
     "ef:update": "cd ./DatingApp.API/ && dotnet ef database update"
   },
   "author": "",
