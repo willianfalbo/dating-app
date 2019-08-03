@@ -19,6 +19,6 @@ export const ROUTES: Routes = [
             { path: 'messages', component: MessagesComponent },
         ]
     },
-    // this one must be underneath the list. it's for not found pages
+    // this one must be underneath the list. It can be used for not found pages as well
     { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
