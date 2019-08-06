@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { map } from 'rxjs/operators';
-import { DATINGAPP_API } from '../app.api';
+import { DATINGAPP_API_URL, TOKEN_NAME } from '../app.setting';
 import { DataToken } from './decoded-token.model';
 
 @Injectable({
@@ -16,20 +16,20 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(model: any) {
-    return this.http.post(`${DATINGAPP_API}/auth/login`, model).pipe(
+    return this.http.post(`${DATINGAPP_API_URL}/auth/login`, model).pipe(
       map((response: any) => {
         if (response) {
-          localStorage.setItem('token', response.token);
+          localStorage.setItem(TOKEN_NAME, response.token);
         }
       }));
   }
 
   logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem(TOKEN_NAME);
   }
 
   register(model: any) {
-    return this.http.post(`${DATINGAPP_API}/auth/register`, model);
+    return this.http.post(`${DATINGAPP_API_URL}/auth/register`, model);
   }
 
   isLoggedIn() {
@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   getToken() {
-    return localStorage.getItem('token');
+    return localStorage.getItem(TOKEN_NAME);
   }
 
   getDecodedToken(): DataToken {
