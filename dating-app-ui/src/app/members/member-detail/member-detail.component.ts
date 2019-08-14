@@ -23,9 +23,7 @@ export class MemberDetailComponent implements OnInit {
 
   private loadMemberDetails() {
     this.route.data.subscribe(data => {
-      // get data before activating the route.
-      // It can be used to avoid using safe navigators "?" in html page
-      this.user = data['userResolver'];
+      this.user = data['userResolver']; // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
     });
   }
 

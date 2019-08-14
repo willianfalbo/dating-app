@@ -16,7 +16,7 @@ import { AlertifyService } from './_services/alertify.service';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guards/auth.guard';
-import { DATINGAPP_API_URL, TOKEN_NAME } from './app.setting';
+import { DATINGAPP_API_URL, TOKEN_NAME } from './app.settings';
 
 // components
 import { AppComponent } from './app.component';
@@ -31,6 +31,9 @@ import { ListsComponent } from './lists/lists.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './members/member-detail/member-detail.resolver';
 import { MembersResolver } from './members/members.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
+import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.guard';
 
 @NgModule({
    declarations: [
@@ -41,6 +44,7 @@ import { MembersResolver } from './members/members.resolver';
       MembersComponent,
       MemberCardComponent,
       MemberDetailComponent,
+      MemberEditComponent,
       MessagesComponent,
       ListsComponent,
    ],
@@ -71,6 +75,8 @@ import { MembersResolver } from './members/members.resolver';
       UserService,
       MemberDetailResolver,
       MembersResolver,
+      MemberEditResolver,
+      MemberEditLeaveGuard,
    ],
    bootstrap: [
       AppComponent

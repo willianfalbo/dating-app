@@ -8,6 +8,9 @@ import { AuthGuard } from './_guards/auth.guard';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './members/member-detail/member-detail.resolver';
 import { MembersResolver } from './members/members.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
+import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.guard';
 
 export const ROUTES: Routes = [
     { path: '', component: HomeComponent },
@@ -19,15 +22,16 @@ export const ROUTES: Routes = [
         children: [
             {
                 path: 'members', component: MembersComponent,
-                // get data before activating the route.
-                // It can be used to avoid using safe navigators "?" in html page
-                resolve: { usersResolver: MembersResolver }
+                resolve: { usersResolver: MembersResolver } // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
             },
             {
                 path: 'members/:id', component: MemberDetailComponent,
-                // get data before activating the route.
-                // It can be used to avoid using safe navigators "?" in html page
-                resolve: { userResolver: MemberDetailResolver }
+                resolve: { userResolver: MemberDetailResolver } // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
+            },
+            {
+                path: 'member/edit', component: MemberEditComponent,
+                resolve: { userEditResolver: MemberEditResolver }, // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
+                canDeactivate: [MemberEditLeaveGuard]
             },
             { path: 'lists', component: ListsComponent },
             { path: 'messages', component: MessagesComponent },

@@ -19,7 +19,8 @@
         {{userName | titlecase}}</a>
       <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="basic-link">
         <li>
-          <a class="dropdown-item" href="#"><i class="fa fa-user"></i>Edit Profile</a>
+          <a class="dropdown-item" [routerLink]="['/member/edit']">
+            <i class="fa fa-user"></i>Edit Profile</a>
         </li>
         <li class="divider dropdown-divider"></li>
         <li>

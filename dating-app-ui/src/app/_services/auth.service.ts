@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { map } from 'rxjs/operators';
-import { DATINGAPP_API_URL, TOKEN_NAME } from '../app.setting';
+import { DATINGAPP_API_URL, TOKEN_NAME } from '../app.settings';
 import { DataToken } from './decoded-token.model';
 
 @Injectable({
