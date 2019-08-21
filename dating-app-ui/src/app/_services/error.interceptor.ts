@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -17,19 +17,34 @@ export class ErrorInterceptor implements HttpInterceptor {
                         console.error(applicationError);
                         return throwError(applicationError);
                     }
-                    const serverError = error.error.errors;
-                    let modalStateErrors = '';
-                    if (serverError && typeof serverError === 'object') {
-                        for (const key in serverError) {
-                            if (serverError[key]) {
-                                modalStateErrors += serverError[key] + '\n';
-                            }
-                        }
-                    }
+                    const serverError = this.getServerErrors(error);
+                    const modalStateErrors = this.getModalStateErrors(serverError);
                     return throwError(modalStateErrors || serverError || 'Server Error');
                 }
             })
         );
+    }
+
+    private getServerErrors(error: HttpErrorResponse): string[] {
+        let serverError: string[];
+        if (!error.error.errors) {
+            serverError = [error.error];
+        } else {
+            serverError = error.error.errors;
+        }
+        return serverError;
+    }
+
+    private getModalStateErrors(serverError: string[]): string {
+        let modalStateErrors = '';
+        if (serverError && typeof serverError === 'object') {
+            for (const key in serverError) {
+                if (serverError[key]) {
+                    modalStateErrors += serverError[key] + '\n';
+                }
+            }
+        }
+        return modalStateErrors;
     }
 }
 

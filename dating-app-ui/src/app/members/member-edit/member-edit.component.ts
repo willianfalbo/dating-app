@@ -15,6 +15,7 @@ export class MemberEditComponent implements OnInit {
 
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+  photoUrl: string;
 
   // prevent unsaved changes when user clicks on closing the window
   @HostListener('window:beforeunload', ['$event'])
@@ -29,11 +30,17 @@ export class MemberEditComponent implements OnInit {
 
   ngOnInit() {
     this.loadMemberEdit();
+
+    // subscribe to user's photo changes
+    this.authService.currentUserPhotoUrl.subscribe(url => {
+      this.photoUrl = url;
+    });
   }
 
   private loadMemberEdit() {
+    // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
     this.route.data.subscribe(data => {
-      this.user = data['userEditResolver']; // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
+      this.user = data['userEditResolver'];
     });
   }
 

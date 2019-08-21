@@ -15,6 +15,9 @@
     </ul>
 
     <span *ngIf="isLoggedIn()" dropdown class="dropdown">
+      <span class="mr-1">
+        <img src="{{photoUrl}}" alt="">
+      </span>
       <a dropdownToggle (click)="false" aria-controls="basic-link-dropdown" class="dropdown-toggle text-light">Welcome
         {{userName | titlecase}}</a>
       <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="basic-link">

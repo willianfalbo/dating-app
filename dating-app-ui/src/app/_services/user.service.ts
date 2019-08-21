@@ -23,4 +23,12 @@ export class UserService {
     return this.http.put(`${DATINGAPP_API_URL}/users/${id}`, user);
   }
 
+  setMainPhoto(userId: number, userPhotoId: number) {
+    return this.http.put(`${DATINGAPP_API_URL}/users/${userId}/photos/${userPhotoId}/setMain`, {});
+  }
+
+  deleteUserPhoto(userId: number, userPhotoId: number) {
+    return this.http.delete(`${DATINGAPP_API_URL}/users/${userId}/photos/${userPhotoId}`);
+  }
+
 }
