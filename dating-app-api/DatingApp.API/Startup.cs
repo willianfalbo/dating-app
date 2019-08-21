@@ -35,7 +35,8 @@ namespace DatingApp.API
 
             //to inject mvc
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(opt => {
+                .AddJsonOptions(opt =>
+                {
                     // to fix error
                     // Self referencing loop detected for property 'xxx' with type 'xxx'. Path 'xxx'
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -43,6 +44,9 @@ namespace DatingApp.API
 
             //adds cross-origin resource sharing these service with other apps
             services.AddCors();
+
+            //setup settings
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
             //configure automapper
             services.AddAutoMapper();
