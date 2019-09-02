@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { DATINGAPP_API_URL, TOKEN_NAME, USER_OBJECT_NAME } from '../app.settings';
 import { DataToken } from './decoded-token.model';
 import { User } from '../_models/user';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,18 +16,25 @@ import { User } from '../_models/user';
 export class AuthService {
 
   jwtHelper = new JwtHelperService();
+  decodedToken: DataToken;
+  currentUser: User;
   userPhotoUrl = new BehaviorSubject<string>('');
   currentUserPhotoUrl = this.userPhotoUrl.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private userService: UserService) { }
 
   login(model: any) {
     return this.http.post(`${DATINGAPP_API_URL}/auth/login`, model).pipe(
       map((response: any) => {
         if (response) {
-          localStorage.setItem(TOKEN_NAME, response.token);
-          localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(response.user));
-          this.changeMemberPhoto(this.getUser().photoUrl);
+          // store token in local storage
+          const token = response.token;
+          localStorage.setItem(TOKEN_NAME, token);
+          this.decodedToken = this.getDecodedToken(token);
+          // store user data in local storage
+          this.currentUser = this.userService.checkUserPhoto(response.user);
+          localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(this.currentUser));
+          this.changeMemberPhoto(this.currentUser.photoUrl);
         }
       }));
   }
@@ -34,10 +42,12 @@ export class AuthService {
   logout() {
     localStorage.removeItem(TOKEN_NAME);
     localStorage.removeItem(USER_OBJECT_NAME);
+    this.currentUser = null;
+    this.decodedToken = null;
   }
 
-  register(model: any) {
-    return this.http.post(`${DATINGAPP_API_URL}/auth/register`, model);
+  register(user: User) {
+    return this.http.post(`${DATINGAPP_API_URL}/auth/register`, user);
   }
 
   isLoggedIn() {
@@ -45,7 +55,7 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  getToken() {
+  getToken(): string {
     return localStorage.getItem(TOKEN_NAME);
   }
 
@@ -53,8 +63,7 @@ export class AuthService {
     return JSON.parse(localStorage.getItem(USER_OBJECT_NAME));
   }
 
-  getDecodedToken(): DataToken {
-    const token = this.getToken();
+  getDecodedToken(token: string): DataToken {
     if (token) {
       const data = this.jwtHelper.decodeToken(token);
       if (!data.nameid) {
@@ -67,24 +76,12 @@ export class AuthService {
     }
   }
 
-  changeMemberPhoto(userPhotoUrl: string) {
-    if (!userPhotoUrl || userPhotoUrl.trim() === '') {
-      userPhotoUrl = `../../assets/gender/${this.getUserGender(this.getUser().gender)}.png`;
-    }
-    // change user's photo from local storage
-    const currentUser = this.getUser();
-    currentUser.photoUrl = userPhotoUrl;
-    localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(currentUser));
+  changeMemberPhoto(photoUrl: string) {
+    // change user's photo in local storage
+    this.currentUser.photoUrl = photoUrl;
+    localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(this.currentUser));
     // emit event for all subscribers
-    this.userPhotoUrl.next(userPhotoUrl);
-  }
-
-  getUserGender(gender: string): string {
-    let userGender = 'unknown';
-    if (gender) {
-      userGender = gender.toLowerCase();
-    }
-    return userGender;
+    this.userPhotoUrl.next(photoUrl);
   }
 
 }

@@ -15,19 +15,9 @@ export class MembersComponent implements OnInit {
   constructor(private route: ActivatedRoute, private authService: AuthService) { }
 
   ngOnInit() {
-
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
     this.route.data.subscribe(data => {
       this.users = data['usersResolver'];
-      this.checkUserPhoto();
-    });
-  }
-
-  private checkUserPhoto() {
-    this.users.forEach(element => {
-      if (!element.photoUrl || element.photoUrl.trim() === '') {
-        element.photoUrl = `../../assets/gender/${this.authService.getUserGender(element.gender)}.png`;
-      }
     });
   }
 }

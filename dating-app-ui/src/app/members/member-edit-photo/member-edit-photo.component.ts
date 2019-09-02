@@ -32,7 +32,7 @@ export class MemberEditPhotoComponent implements OnInit {
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url: `${DATINGAPP_API_URL}/users/${this.authService.getDecodedToken().userId}/photos`,
+      url: `${DATINGAPP_API_URL}/users/${this.authService.decodedToken.userId}/photos`,
       authToken: `Bearer ${this.authService.getToken()}`,
       isHTML5: true,
       allowedFileType: ['image'],
@@ -56,12 +56,15 @@ export class MemberEditPhotoComponent implements OnInit {
           isMain: resp.isMain,
         };
         this.photos.push(userPhoto);
+        if (userPhoto.isMain) {
+          this.authService.changeMemberPhoto(userPhoto.url);
+        }
       }
     };
   }
 
   setMainPhoto(userPhoto: UserPhoto) {
-    this.userService.setMainPhoto(+this.authService.getDecodedToken().userId, userPhoto.id)
+    this.userService.setMainPhoto(+this.authService.decodedToken.userId, userPhoto.id)
       .subscribe(next => {
         this.currentMainPhoto = this.photos.filter(p => p.isMain === true)[0];
         this.currentMainPhoto.isMain = false;
@@ -75,7 +78,7 @@ export class MemberEditPhotoComponent implements OnInit {
 
   deleteUserPhoto(userPhotoId: number) {
     this.alertify.confirm('Are you sure you want to delete this photo?', () => {
-      this.userService.deleteUserPhoto(+this.authService.getDecodedToken().userId, userPhotoId)
+      this.userService.deleteUserPhoto(+this.authService.decodedToken.userId, userPhotoId)
         .subscribe(result => {
           // remove deleted photo from the array
           this.photos = this.photos.filter(p => p.id !== userPhotoId);
