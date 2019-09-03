@@ -16,7 +16,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { AuthService } from './_services/auth.service';
 import { AlertifyService } from './_services/alertify.service';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { DATINGAPP_API_URL, TOKEN_NAME } from './app.settings';
+import { TOKEN_NAME, DATINGAPP_API_HOST_URL } from './app.settings';
 import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.guard';
@@ -37,6 +37,10 @@ import { MembersResolver } from './members/members.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
 import { MemberEditPhotoComponent } from './members/member-edit-photo/member-edit-photo.component';
+
+export function tokenGetter() {
+   return localStorage.getItem(TOKEN_NAME);
+}
 
 @NgModule({
    declarations: [
@@ -65,11 +69,9 @@ import { MemberEditPhotoComponent } from './members/member-edit-photo/member-edi
       // send up jwt tokens automatically (https://github.com/auth0/angular2-jwt)
       JwtModule.forRoot({
          config: {
-            tokenGetter: () => {
-               return localStorage.getItem(TOKEN_NAME);
-            },
-            whitelistedDomains: [FormatUrl(DATINGAPP_API_URL)],
-            blacklistedRoutes: [`${FormatUrl(DATINGAPP_API_URL)}/api/auth`] // except auth api
+            tokenGetter: tokenGetter,
+            whitelistedDomains: [DATINGAPP_API_HOST_URL],
+            blacklistedRoutes: [`${DATINGAPP_API_HOST_URL}/api/auth`] // except auth api
          }
       }),
       NgxGalleryModule,
@@ -91,11 +93,3 @@ import { MemberEditPhotoComponent } from './members/member-edit-photo/member-edi
    ]
 })
 export class AppModule { }
-
-// up to this point using full url does not work when sending up jwt tokens automatically. We should format it as the following sample:
-// E.g. The url "http://localhost:5000/api" should be formatted as "localhost:5000"
-export function FormatUrl(url: string) {
-   const formattedUrl = new URL(url).host;
-   // console.log('FORMATTED URL', formattedUrl);
-   return formattedUrl;
-}
