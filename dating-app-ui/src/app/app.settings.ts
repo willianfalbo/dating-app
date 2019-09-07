@@ -1,13 +1,20 @@
+import { JwtModuleOptions } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 
 export const DATINGAPP_API_URL = environment.apiUrl;
 
-// https://github.com/auth0/angular2-jwt
-// up to this point, using full url does not work when sending up jwt tokens automatically.
-// We should format it as the following sample:
-// E.g. The url 'https://datingapp-api.azurewebsites.net/api' should be formatted as 'datingapp-api.azurewebsites.net'
-export const DATINGAPP_API_HOST_URL = new URL(environment.apiUrl).host;
-
 export const TOKEN_NAME = 'token';
 
 export const USER_OBJECT_NAME = 'user';
+
+export const JWT_MODULE_OPTIONS: JwtModuleOptions = {
+    config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ['localhost:5000', 'datingapp-api.azurewebsites.net'],
+        blacklistedRoutes: ['localhost:5000/api/auth', 'datingapp-api.azurewebsites.net/api/auth'] // except auth api
+    }
+};
+
+export function tokenGetter(): string {
+    return localStorage.getItem(TOKEN_NAME);
+}

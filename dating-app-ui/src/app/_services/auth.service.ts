@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { DATINGAPP_API_URL, TOKEN_NAME, USER_OBJECT_NAME } from '../app.settings';
-import { DataToken } from './decoded-token.model';
+import { DecodedToken } from '../_models/decoded-token.model';
 import { User } from '../_models/user';
 import { UserService } from './user.service';
 
@@ -16,7 +16,7 @@ import { UserService } from './user.service';
 export class AuthService {
 
   jwtHelper = new JwtHelperService();
-  decodedToken: DataToken;
+  decodedToken: DecodedToken;
   currentUser: User;
   userPhotoUrl = new BehaviorSubject<string>('');
   currentUserPhotoUrl = this.userPhotoUrl.asObservable();
@@ -63,7 +63,7 @@ export class AuthService {
     return JSON.parse(localStorage.getItem(USER_OBJECT_NAME));
   }
 
-  getDecodedToken(token: string): DataToken {
+  getDecodedToken(token: string): DecodedToken {
     if (token) {
       const data = this.jwtHelper.decodeToken(token);
       if (!data.nameid) {
@@ -72,7 +72,7 @@ export class AuthService {
       if (!data.unique_name) {
         throw new Error('Expected UserName property');
       }
-      return new DataToken(data.nameid, data.unique_name);
+      return new DecodedToken(data.nameid, data.unique_name);
     }
   }
 

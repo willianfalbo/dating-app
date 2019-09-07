@@ -1,5 +1,5 @@
 
 // Payload Token
-export class DataToken {
+export class DecodedToken {
     constructor(public userId: string, public userName: string) { }
 }

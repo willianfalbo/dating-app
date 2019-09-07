@@ -17,7 +17,6 @@ import { TimeAgoPipe } from 'time-ago-pipe';
 import { AuthService } from './_services/auth.service';
 import { AlertifyService } from './_services/alertify.service';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { TOKEN_NAME, DATINGAPP_API_HOST_URL } from './app.settings';
 import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.guard';
@@ -41,10 +40,7 @@ import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
 import { MemberEditPhotoComponent } from './members/member-edit-photo/member-edit-photo.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { LoadingScreenInterceptorProvider } from './_services/loading-screen.interceptor';
-
-export function tokenGetter() {
-   return localStorage.getItem(TOKEN_NAME);
-}
+import { JWT_MODULE_OPTIONS } from './app.settings';
 
 @NgModule({
    declarations: [
@@ -72,14 +68,7 @@ export function tokenGetter() {
       BsDatepickerModule.forRoot(),
       TabsModule.forRoot(),
       RouterModule.forRoot(ROUTES),
-      // send up jwt tokens automatically (https://github.com/auth0/angular2-jwt)
-      JwtModule.forRoot({
-         config: {
-            tokenGetter: tokenGetter,
-            whitelistedDomains: [DATINGAPP_API_HOST_URL],
-            blacklistedRoutes: [`${DATINGAPP_API_HOST_URL}/api/auth`] // except auth api
-         }
-      }),
+      JwtModule.forRoot(JWT_MODULE_OPTIONS), // send up jwt tokens automatically (https://github.com/auth0/angular2-jwt)
       NgxGalleryModule,
       FileUploadModule,
    ],
