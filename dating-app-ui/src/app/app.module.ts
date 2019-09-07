@@ -21,6 +21,7 @@ import { TOKEN_NAME, DATINGAPP_API_HOST_URL } from './app.settings';
 import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.guard';
+import { LoadingScreenService } from './_services/loading-screen.service';
 
 // components
 import { AppComponent } from './app.component';
@@ -38,6 +39,8 @@ import { MembersResolver } from './members/members.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
 import { MemberEditPhotoComponent } from './members/member-edit-photo/member-edit-photo.component';
+import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
+import { LoadingScreenInterceptorProvider } from './_services/loading-screen.interceptor';
 
 export function tokenGetter() {
    return localStorage.getItem(TOKEN_NAME);
@@ -57,6 +60,7 @@ export function tokenGetter() {
       MessagesComponent,
       ListsComponent,
       TimeAgoPipe,
+      LoadingScreenComponent
    ],
    imports: [
       BrowserModule,
@@ -89,6 +93,8 @@ export function tokenGetter() {
       MembersResolver,
       MemberEditResolver,
       MemberEditLeaveGuard,
+      LoadingScreenService,
+      LoadingScreenInterceptorProvider,
    ],
    bootstrap: [
       AppComponent
