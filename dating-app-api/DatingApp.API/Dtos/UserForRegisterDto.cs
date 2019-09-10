@@ -19,7 +19,16 @@ namespace DatingApp.API.Dtos
         public string Password { get; set; }
 
         [Required]
-        public string Gender { get; set; }
+        private string _gender;
+        public string Gender
+        {
+            get { return _gender; }
+            set
+            {
+                value = value?.ToLower()?.Trim();
+                _gender = (value == "male" || value == "female") ? value : "unknown";
+            }
+        }
 
         [Required]
         public string KnownAs { get; set; }

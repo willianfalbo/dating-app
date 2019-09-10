@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
@@ -27,10 +28,23 @@ namespace DatingApp.API.Controllers
 
         // api/users
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var usersFromRepo = await _repo.GetUsers();
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var currentUserFromRepo = await _repo.GetUser(currentUserId);
+
+            userParams.UserId = currentUserId;
+
+            if (string.IsNullOrWhiteSpace(userParams.Gender))
+                userParams.Gender = currentUserFromRepo.Gender == "male" ? "female" : "male";
+
+            var usersFromRepo = await _repo.GetUsers(userParams);
             var usersForListDto = _mapper.Map<IEnumerable<UserForListDto>>(usersFromRepo);
+
+            Response.AddPagination(usersFromRepo.CurrentPage, usersFromRepo.PageSize,
+                usersFromRepo.TotalCount, usersFromRepo.TotalPages);
+
             return Ok(usersForListDto);
         }
 
