@@ -21,6 +21,7 @@ import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.guard';
 import { LoadingScreenService } from './_services/loading-screen.service';
+import { JWT_MODULE_OPTIONS } from './app.settings';
 
 // components
 import { AppComponent } from './app.component';
@@ -32,6 +33,7 @@ import { MembersComponent } from './members/members.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MessagesComponent } from './messages/messages.component';
 import { ListsComponent } from './lists/lists.component';
+import { ListsResolver } from './lists/lists.resolver';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './members/member-detail/member-detail.resolver';
 import { MembersResolver } from './members/members.resolver';
@@ -40,7 +42,6 @@ import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
 import { MemberEditPhotoComponent } from './members/member-edit-photo/member-edit-photo.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { LoadingScreenInterceptorProvider } from './_services/loading-screen.interceptor';
-import { JWT_MODULE_OPTIONS } from './app.settings';
 
 @NgModule({
    declarations: [
@@ -83,6 +84,7 @@ import { JWT_MODULE_OPTIONS } from './app.settings';
       MemberDetailResolver,
       MembersResolver,
       MemberEditResolver,
+      ListsResolver,
       MemberEditLeaveGuard,
       LoadingScreenService,
       LoadingScreenInterceptorProvider,

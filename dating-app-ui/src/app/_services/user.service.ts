@@ -15,7 +15,7 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(pageNumber?: number, pageSize?: number, userParams?: any): Observable<PaginatedResult<User[]>> {
+  getUsers(pageNumber?: number, pageSize?: number, userParams?: any, likesParam?: string): Observable<PaginatedResult<User[]>> {
     const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
 
     let params = new HttpParams();
@@ -31,6 +31,14 @@ export class UserService {
       params = params.append('maxAge', userParams.maxAge);
       params = params.append('gender', userParams.gender);
       params = params.append('orderBy', userParams.orderBy);
+    }
+    if (likesParam) {
+      if (likesParam.toLowerCase() === 'likers') {
+        params = params.append('likers', 'true');
+      }
+      if (likesParam.toLowerCase() === 'likees') {
+        params = params.append('likees', 'true');
+      }
     }
 
     return this.http.get<User[]>(`${DATINGAPP_API_URL}/users`, { observe: 'response', params })
@@ -55,11 +63,11 @@ export class UserService {
 
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${DATINGAPP_API_URL}/users/${id}`)
-    .pipe(
-      tap(p => {
-        p = this.checkUserPhoto(p); // set default photo in case of null
-      })
-    );
+      .pipe(
+        tap(p => {
+          p = this.checkUserPhoto(p); // set default photo in case of null
+        })
+      );
   }
 
   updateUser(id: number, user: User) {
@@ -88,6 +96,10 @@ export class UserService {
       user.photoUrl = `../../assets/gender/${this.checkUserGender(user.gender)}.png`;
     }
     return user;
+  }
+
+  sendLike(userId: number, recipientId: number) {
+    return this.http.post(`${DATINGAPP_API_URL}/users/${userId}/like/${recipientId}`, {});
   }
 
 }
