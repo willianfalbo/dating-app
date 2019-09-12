@@ -31,15 +31,17 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { MembersComponent } from './members/members.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
-import { MessagesComponent } from './messages/messages.component';
-import { ListsComponent } from './lists/lists.component';
-import { ListsResolver } from './lists/lists.resolver';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './members/member-detail/member-detail.resolver';
 import { MembersResolver } from './members/members.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
 import { MemberEditPhotoComponent } from './members/member-edit-photo/member-edit-photo.component';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { MessagesComponent } from './messages/messages.component';
+import { MessagesResolver } from './messages/messages.resolver';
+import { ListsComponent } from './lists/lists.component';
+import { ListsResolver } from './lists/lists.resolver';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { LoadingScreenInterceptorProvider } from './_services/loading-screen.interceptor';
 
@@ -54,6 +56,7 @@ import { LoadingScreenInterceptorProvider } from './_services/loading-screen.int
       MemberDetailComponent,
       MemberEditComponent,
       MemberEditPhotoComponent,
+      MemberMessagesComponent,
       MessagesComponent,
       ListsComponent,
       TimeAgoPipe,
@@ -84,8 +87,9 @@ import { LoadingScreenInterceptorProvider } from './_services/loading-screen.int
       MemberDetailResolver,
       MembersResolver,
       MemberEditResolver,
-      ListsResolver,
       MemberEditLeaveGuard,
+      ListsResolver,
+      MessagesResolver,
       LoadingScreenService,
       LoadingScreenInterceptorProvider,
    ],

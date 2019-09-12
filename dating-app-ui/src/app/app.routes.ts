@@ -12,6 +12,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
 import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.guard';
 import { ListsResolver } from './lists/lists.resolver';
+import { MessagesResolver } from './messages/messages.resolver';
 
 export const ROUTES: Routes = [
     { path: '', component: HomeComponent },
@@ -34,8 +35,8 @@ export const ROUTES: Routes = [
                 resolve: { userEditResolver: MemberEditResolver }, // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
                 canDeactivate: [MemberEditLeaveGuard]
             },
-            { path: 'lists', component: ListsComponent, resolve: {listsResolver: ListsResolver} },
-            { path: 'messages', component: MessagesComponent },
+            { path: 'lists', component: ListsComponent, resolve: { listsResolver: ListsResolver } },
+            { path: 'messages', component: MessagesComponent, resolve: { messagesResolver: MessagesResolver } },
         ]
     },
     // this one must be underneath the list. It can be used for not found pages as well

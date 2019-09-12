@@ -7,16 +7,18 @@ import { tap, map } from 'rxjs/operators';
 import { DATINGAPP_API_URL } from '../app.settings';
 import { User } from '../_models/user';
 import { PaginatedResult } from '../_models/pagination';
+import { Message } from '../_models/message';
+import { AlertifyService } from './alertify.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private alertify: AlertifyService) { }
 
   getUsers(pageNumber?: number, pageSize?: number, userParams?: any, likesParam?: string): Observable<PaginatedResult<User[]>> {
-    const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
+    const paginatedResult = new PaginatedResult<User[]>();
 
     let params = new HttpParams();
 
@@ -44,18 +46,14 @@ export class UserService {
     return this.http.get<User[]>(`${DATINGAPP_API_URL}/users`, { observe: 'response', params })
       .pipe(
         map(response => {
-
           paginatedResult.result = response.body;
-
           if (response.headers.get('Pagination') != null) {
             paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
           }
-
           // set default photo in case of null
-          paginatedResult.result.forEach(p => {
-            p = this.checkUserPhoto(p);
+          paginatedResult.result.forEach(u => {
+            u = this.checkUserPhoto(u);
           });
-
           return paginatedResult;
         })
       );
@@ -64,8 +62,8 @@ export class UserService {
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${DATINGAPP_API_URL}/users/${id}`)
       .pipe(
-        tap(p => {
-          p = this.checkUserPhoto(p); // set default photo in case of null
+        tap(u => {
+          u = this.checkUserPhoto(u); // set default photo in case of null
         })
       );
   }
@@ -83,23 +81,87 @@ export class UserService {
   }
 
   checkUserGender(gender: string): string {
-    gender = gender.toLowerCase();
-    if (gender === 'male' || gender === 'female') {
-      return gender;
+    if (gender) {
+      gender = gender.toLowerCase().trim();
+      if (gender === 'male' || gender === 'female' || gender === 'unknown') {
+        return gender;
+      } else {
+        return 'unknown';
+      }
     } else {
       return 'unknown';
     }
   }
 
-  checkUserPhoto(user: User) {
-    if (!user.photoUrl || user.photoUrl.trim() === '') {
-      user.photoUrl = `../../assets/gender/${this.checkUserGender(user.gender)}.png`;
-    }
+  checkUserPhoto(user: User): User {
+    user.photoUrl = this.checkEmptyUserPhoto(user.photoUrl, user.gender);
     return user;
+  }
+
+  checkEmptyUserPhoto(photoUrl: string, gender: string): string {
+    if (!photoUrl || photoUrl.trim() === '') {
+      photoUrl = `../../assets/gender/${this.checkUserGender(gender)}.png`;
+    }
+    return photoUrl;
   }
 
   sendLike(userId: number, recipientId: number) {
     return this.http.post(`${DATINGAPP_API_URL}/users/${userId}/like/${recipientId}`, {});
+  }
+
+  getMessages(id: number, pageNumber?: number, pageSize?: number, messageFontainer?: string): Observable<PaginatedResult<Message[]>> {
+    const paginatedResult = new PaginatedResult<Message[]>();
+
+    let params = new HttpParams();
+
+    params = params.append('container', messageFontainer);
+
+    if (pageNumber) {
+      params = params.append('pageNumber', pageNumber.toString());
+    }
+    if (pageSize) {
+      params = params.append('pageSize', pageSize.toString());
+    }
+
+    return this.http.get<Message[]>(`${DATINGAPP_API_URL}/users/${id}/messages`, { observe: 'response', params })
+      .pipe(
+        map(response => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+          }
+          // set default photo in case of null
+          paginatedResult.result.forEach(m => {
+            m.senderPhotoUrl = this.checkEmptyUserPhoto(m.senderPhotoUrl, m.senderGender);
+            m.recipientPhotoUrl = this.checkEmptyUserPhoto(m.recipientPhotoUrl, m.recipientGender);
+          });
+          return paginatedResult;
+        })
+      );
+  }
+
+  getMessagesThread(userId: number, recipientId: number) {
+    return this.http.get<Message[]>(`${DATINGAPP_API_URL}/users/${userId}/messages/thread/${recipientId}`)
+    .pipe(
+      tap(messages => {
+        messages.forEach(m => {
+          m.senderPhotoUrl = this.checkEmptyUserPhoto(m.senderPhotoUrl, m.senderGender);
+          m.recipientPhotoUrl = this.checkEmptyUserPhoto(m.recipientPhotoUrl, m.recipientGender);
+        });
+      })
+    );
+  }
+
+  sendMessage(userId: number, message: Message) {
+    return this.http.post(`${DATINGAPP_API_URL}/users/${userId}/messages`, message);
+  }
+
+  deleteMessage(userId: number, id: number) {
+    return this.http.delete(`${DATINGAPP_API_URL}/users/${userId}/messages/${id}/delete`);
+  }
+
+  markSenderMessagesAsRead(userId: number, recipientId: number) {
+    return this.http.post(`${DATINGAPP_API_URL}/users/${userId}/messages/thread/${recipientId}/mark-as-read`, {});
   }
 
 }
