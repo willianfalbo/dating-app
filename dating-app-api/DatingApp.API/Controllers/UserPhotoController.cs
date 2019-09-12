@@ -117,7 +117,7 @@ namespace DatingApp.API.Controllers
             var userFromRepo = await _repo.GetUser(userId);
 
             if (!userFromRepo.Photos.Any(p => p.Id == userPhotoId))
-                return Unauthorized();
+                return NotFound();
 
             var userPhotoFromRepo = await _repo.GetUserPhoto(userPhotoId);
 
@@ -145,7 +145,7 @@ namespace DatingApp.API.Controllers
             var userFromRepo = await _repo.GetUser(userId);
 
             if (!userFromRepo.Photos.Any(p => p.Id == userPhotoId))
-                return Unauthorized();
+                return NotFound();
 
             var userPhotoFromRepo = await _repo.GetUserPhoto(userPhotoId);
 

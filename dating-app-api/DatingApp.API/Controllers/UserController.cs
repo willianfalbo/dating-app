@@ -72,7 +72,7 @@ namespace DatingApp.API.Controllers
             if (await _repo.SaveAll())
                 return Ok(_mapper.Map<UserForDetailedDto>(userFromRepo));
 
-            throw new Exception($"Updating user {id} failed on save");
+            return BadRequest($"Updating user {id} failed on save");
         }
 
         // api/users/{userId}/like/{recipientId}
