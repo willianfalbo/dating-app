@@ -56,7 +56,11 @@ export class MembersComponent implements OnInit {
   }
 
   private setDefaultFilters() {
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
+    if (this.user.gender === 'unknown') {
+      this.userParams.gender = 'unknown';
+    } else {
+      this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
+    }
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
     this.userParams.orderBy = 'lastActive';

@@ -57,7 +57,7 @@ export class MemberEditPhotoComponent implements OnInit {
         };
         this.photos.push(userPhoto);
         if (userPhoto.isMain) {
-          this.authService.changeMemberPhoto(userPhoto.url);
+          this.authService.updateMemberPhoto(userPhoto.url);
         }
       }
     };
@@ -69,7 +69,7 @@ export class MemberEditPhotoComponent implements OnInit {
         this.currentMainPhoto = this.photos.filter(p => p.isMain === true)[0];
         this.currentMainPhoto.isMain = false;
         userPhoto.isMain = true;
-        this.authService.changeMemberPhoto(userPhoto.url);
+        this.authService.updateMemberPhoto(userPhoto.url);
         this.alertify.success('Successfully set to main');
       }, error => {
         this.alertify.error(error);

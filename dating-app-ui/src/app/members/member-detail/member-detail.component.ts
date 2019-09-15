@@ -1,8 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 import { TabsetComponent } from 'ngx-bootstrap';
+
 import { User } from 'src/app/_models/user';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { UserService } from 'src/app/_services/user.service';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -16,7 +21,8 @@ export class MemberDetailComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private userService: UserService,
+    private alertify: AlertifyService, private authService: AuthService) { }
 
   ngOnInit() {
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
@@ -26,7 +32,9 @@ export class MemberDetailComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       const tabId = params['tab'];
-      this.selectTab(tabId);
+      if (tabId) {
+        this.selectTab(tabId);
+      }
     });
 
     this.loadUserPhotos();
@@ -69,6 +77,14 @@ export class MemberDetailComponent implements OnInit {
       tabId = 0;
     }
     this.memberTabs.tabs[tabId].active = true;
+  }
+
+  sendLike(recipientId: number) {
+    this.userService.sendLike(+this.authService.decodedToken.userId, recipientId).subscribe(data => {
+      this.alertify.success(`You have liked ${this.user.knownAs}`);
+    }, error => {
+      this.alertify.error(error);
+    });
   }
 
 }

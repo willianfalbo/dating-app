@@ -2,17 +2,12 @@
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr>
 
-  <div class="form-group">
-    <label class="control-label" style="margin-right:10px">I am a: </label>
-    <label class="radio-inline">
-      <input class="mr-3" type="radio" value="male" formControlName="gender">Male
-    </label>
-    <label class="radio-inline ml-3">
-      <input class="mr-3" type="radio" value="female" formControlName="gender">Female
-    </label>
-    <label class="radio-inline ml-3">
-      <input class="mr-3" type="radio" value="unknown" formControlName="gender">Third Gender
-    </label>
+  <div class="form-group text-center">
+    <div class="btn-group" btnRadioGroup formControlName="gender">
+      <label btnRadio="male" class="btn btn-light" tabindex="0" role="button">Male</label>
+      <label btnRadio="female" class="btn btn-light" tabindex="0" role="button">Female</label>
+      <label btnRadio="unknown" class="btn btn-light" tabindex="0" role="button">Third Gender</label>
+    </div>
   </div>
 
   <div class="form-group">

@@ -94,8 +94,12 @@ export class UserService {
   }
 
   checkUserPhoto(user: User): User {
-    user.photoUrl = this.checkEmptyUserPhoto(user.photoUrl, user.gender);
-    return user;
+    if (user) {
+      user.photoUrl = this.checkEmptyUserPhoto(user.photoUrl, user.gender);
+      return user;
+    } else {
+      return user;
+    }
   }
 
   checkEmptyUserPhoto(photoUrl: string, gender: string): string {
@@ -142,14 +146,14 @@ export class UserService {
 
   getMessagesThread(userId: number, recipientId: number) {
     return this.http.get<Message[]>(`${DATINGAPP_API_URL}/users/${userId}/messages/thread/${recipientId}`)
-    .pipe(
-      tap(messages => {
-        messages.forEach(m => {
-          m.senderPhotoUrl = this.checkEmptyUserPhoto(m.senderPhotoUrl, m.senderGender);
-          m.recipientPhotoUrl = this.checkEmptyUserPhoto(m.recipientPhotoUrl, m.recipientGender);
-        });
-      })
-    );
+      .pipe(
+        tap(messages => {
+          messages.forEach(m => {
+            m.senderPhotoUrl = this.checkEmptyUserPhoto(m.senderPhotoUrl, m.senderGender);
+            m.recipientPhotoUrl = this.checkEmptyUserPhoto(m.recipientPhotoUrl, m.recipientGender);
+          });
+        })
+      );
   }
 
   sendMessage(userId: number, message: Message) {

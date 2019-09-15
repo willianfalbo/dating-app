@@ -21,9 +21,7 @@ export class AppComponent implements OnInit {
     // get current user
     const user = this.authService.getUser();
     if (user) {
-      this.authService.currentUser = user;
-      // change user photo when loading app component
-      this.authService.changeMemberPhoto(this.authService.currentUser.photoUrl);
+      this.authService.updateMember(user);
     }
 
   }

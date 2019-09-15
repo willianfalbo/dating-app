@@ -17,9 +17,17 @@ export class AuthService {
 
   jwtHelper = new JwtHelperService();
   decodedToken: DecodedToken;
-  currentUser: User;
-  userPhotoUrl = new BehaviorSubject<string>('');
-  currentUserPhotoUrl = this.userPhotoUrl.asObservable();
+
+  private _currentUser: User;
+  get currentUser(): User {
+    return this._currentUser;
+  }
+
+  // creates an observable for users
+  // it will be used when users set a different Main Photo or update their display name
+  // so all components that subscribes to this will be notified
+  currentUserBehavior = new BehaviorSubject<User>(new User());
+  currentUserObservable = this.currentUserBehavior.asObservable();
 
   constructor(private http: HttpClient, private userService: UserService) { }
 
@@ -31,10 +39,8 @@ export class AuthService {
           const token = response.token;
           localStorage.setItem(TOKEN_NAME, token);
           this.decodedToken = this.getDecodedToken(token);
-          // store user data in local storage
-          this.currentUser = this.userService.checkUserPhoto(response.user);
-          localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(this.currentUser));
-          this.changeMemberPhoto(this.currentUser.photoUrl);
+          // update member information
+          this.updateMember(response.user);
         }
       }));
   }
@@ -42,7 +48,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem(TOKEN_NAME);
     localStorage.removeItem(USER_OBJECT_NAME);
-    this.currentUser = null;
+    this._currentUser = null;
     this.decodedToken = null;
   }
 
@@ -76,12 +82,19 @@ export class AuthService {
     }
   }
 
-  changeMemberPhoto(photoUrl: string) {
-    // change user's photo in local storage
-    this.currentUser.photoUrl = photoUrl;
-    localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(this.currentUser));
+  updateMember(user: User) {
+    user = this.userService.checkUserPhoto(user);
+    // change user's information in local storage
+    this._currentUser = user;
+    localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(this._currentUser));
     // emit event for all subscribers
-    this.userPhotoUrl.next(photoUrl);
+    this.currentUserBehavior.next(user);
+  }
+
+  updateMemberPhoto(photoUrl: string) {
+    const userToChange = this._currentUser;
+    userToChange.photoUrl = photoUrl;
+    this.updateMember(userToChange);
   }
 
 }

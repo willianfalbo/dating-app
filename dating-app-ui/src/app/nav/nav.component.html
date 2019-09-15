@@ -18,16 +18,16 @@
       <span class="mr-1">
         <img src="{{photoUrl}}" alt="">
       </span>
-      <a dropdownToggle (click)="false" aria-controls="basic-link-dropdown" class="dropdown-toggle text-light">Welcome
+      <a dropdownToggle (click)="false" aria-controls="basic-link-dropdown" class="dropdown-toggle text-light">Welcome 
         {{authService.decodedToken?.userName | titlecase}}</a>
       <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="basic-link">
         <li>
           <a class="dropdown-item" [routerLink]="['/member/edit']">
-            <i class="fa fa-user"></i>Edit Profile</a>
+            <i class="fa fa-user mr-1"></i>Edit Profile</a>
         </li>
         <li class="divider dropdown-divider"></li>
         <li>
-          <a class="dropdown-item" (click)="logout()"><i class="fa fa-user"></i>Logout</a>
+          <a class="dropdown-item text-danger" (click)="logout()"><i class="fa fa-sign-out mr-1"></i>Logout</a>
         </li>
       </ul>
     </span>
