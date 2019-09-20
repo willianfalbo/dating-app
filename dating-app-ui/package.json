@@ -6,7 +6,7 @@
     "start": "npm run open && npm run watch",
     "build:dev": "ng build",
     "build:prod": "ng build --prod --extract-css=false",
-    "build:prod-bh": "ng build --prod --extract-css=false --base-href \"/dating-app-spa/\"",
+    "build:prod-bh": "ng build --prod --extract-css=false --base-href \"/dating-app/\"",
     "watch": "ng serve --watch",
     "http:dev": "npm run build:dev && cd dist && npm run open:http-dev && python -m http.server 8000",
     "http:prod": "npm run build:prod && cd dist && npm run open:http-prod && python -m http.server 8001",
