@@ -104,7 +104,7 @@ export class UserService {
 
   checkEmptyUserPhoto(photoUrl: string, gender: string): string {
     if (!photoUrl || photoUrl.trim() === '') {
-      photoUrl = `../../assets/gender/${this.checkUserGender(gender)}.png`;
+      photoUrl = `assets/gender/${this.checkUserGender(gender)}.png`;
     }
     return photoUrl;
   }
