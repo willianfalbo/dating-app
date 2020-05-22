@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API
@@ -34,8 +34,7 @@ namespace DatingApp.API
             );
 
             //to inject mvc
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(opt =>
+            services.AddControllers().AddNewtonsoftJson(opt => 
                 {
                     // to fix error
                     // Self referencing loop detected for property 'xxx' with type 'xxx'. Path 'xxx'
@@ -49,14 +48,13 @@ namespace DatingApp.API
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
             //configure automapper
-            services.AddAutoMapper();
+            services.AddAutoMapper(typeof(DatingRepository).Assembly);
 
             //to setup Dependence Injection throughout the application
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
-            services.AddTransient<Seed>();
 
-            //to setup JWT Authentication (Auth0)
+            //to setup JWT Authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -75,7 +73,7 @@ namespace DatingApp.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -97,21 +95,22 @@ namespace DatingApp.API
                         }
                     });
                 });
-
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                // app.UseHsts();
             }
 
             // app.UseHttpsRedirection();
 
-            // uncomment the following line to seed data into the database
-            // seeder.SeedUsers();
+            app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+			
             // setup cors
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-            app.UseAuthentication();
-            app.UseMvc();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

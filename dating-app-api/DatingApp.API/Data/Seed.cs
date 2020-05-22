@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using DatingApp.API.Models;
 using Newtonsoft.Json;
 
@@ -10,40 +10,35 @@ namespace DatingApp.API.Data
     // https://randomuser.me/
     public class Seed
     {
-        private readonly DataContext _context;
-        public Seed(DataContext context)
+        public static void SeedUsers(DataContext context)
         {
-            _context = context;
-        }
-
-        public void SeedUsers()
-        {
-            var userData = File.ReadAllText("Data/UserSeedData.json");
-            var users = JsonConvert.DeserializeObject<List<User>>(userData);
-
-            foreach (var user in users)
+            if (!context.Users.Any())
             {
-                byte[] passwordHash, passwordSalt;
-                CreatePasswordHash("password", out passwordHash, out passwordSalt);
+                var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
+                var users = JsonConvert.DeserializeObject<List<User>>(userData);
+                foreach (var user in users)
+                {
+                    byte[] passwordHash, passwordSalt;
+                    CreatePasswordHash("password", out passwordHash, out passwordSalt);
 
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-                user.Username = user.Username.ToLower();
+                    user.PasswordHash = passwordHash;
+                    user.PasswordSalt = passwordSalt;
+                    user.Username = user.Username.ToLower();
+                    context.Users.Add(user);
+                }
 
-                _context.Users.Add(user);
+                context.SaveChanges();
             }
-
-            _context.SaveChanges();
         }
 
         // This class was copied from AuthRepository.cs
         // It is only for testing purpose and we do not want to mess around
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
-                passwordSalt = hmac.Key; // randomly generated
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)); // computing the rash
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
     }
