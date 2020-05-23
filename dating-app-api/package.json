@@ -6,10 +6,10 @@
   "scripts": {
     "start": "dotnet run --project ./DatingApp.API/",
     "watch": "dotnet watch --project ./DatingApp.API/ run",
-    "ef:migration-add": "cd ./DatingApp.API/ && dotnet ef migrations add",
-    "ef:migration-script": "cd ./DatingApp.API/ && dotnet ef migrations script",
-    "ef:migration-remove": "cd ./DatingApp.API/ && dotnet ef migrations remove",
-    "ef:update": "cd ./DatingApp.API/ && dotnet ef database update",
+    "migration:add": "cd ./DatingApp.API/ && dotnet ef migrations add",
+    "migration:script": "cd ./DatingApp.API/ && dotnet ef migrations script",
+    "migration:remove": "cd ./DatingApp.API/ && dotnet ef migrations remove",
+    "migration:update": "cd ./DatingApp.API/ && dotnet ef database update",
     "docker:database": "docker-compose up --build"
   },
   "author": "",
