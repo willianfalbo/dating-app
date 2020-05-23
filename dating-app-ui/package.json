@@ -3,16 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run open && npm run watch",
-    "build:dev": "ng build",
+    "start": "npm run watch",
+    "watch": "ng serve --watch --open",
+    "build:dev": "ng build --extract-css=false",
     "build:prod": "ng build --prod --extract-css=false",
-    "build:prod-bh": "ng build --prod --extract-css=false --base-href \"/dating-app/\"",
-    "watch": "ng serve --watch",
-    "http:dev": "npm run build:dev && cd dist && npm run open:http-dev && python -m http.server 8000",
-    "http:prod": "npm run build:prod && cd dist && npm run open:http-prod && python -m http.server 8001",
-    "open": "start http://localhost:4200",
-    "open:http-dev": "start http://localhost:8000",
-    "open:http-prod": "start http://localhost:8001"
+    "http-server": "cd dist && python -m SimpleHTTPServer 8000"
   },
   "private": true,
   "dependencies": {
