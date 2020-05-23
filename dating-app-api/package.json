@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run open && npm run watch",
+    "start": "dotnet run",
     "watch": "dotnet watch --project ./DatingApp.API/ run",
-    "open": "start http://localhost:5000/api",
     "ef:migration-add": "cd ./DatingApp.API/ && dotnet ef migrations add",
     "ef:migration-script": "cd ./DatingApp.API/ && dotnet ef migrations script",
     "ef:migration-remove": "cd ./DatingApp.API/ && dotnet ef migrations remove",
-    "ef:update": "cd ./DatingApp.API/ && dotnet ef database update"
+    "ef:update": "cd ./DatingApp.API/ && dotnet ef database update",
+    "docker:database": "docker-compose up --build"
   },
   "author": "",
   "license": "ISC"
