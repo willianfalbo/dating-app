@@ -7,13 +7,12 @@ using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
+    // [Authorize] // once we are using AspNet Core Identity, we dont need this line anymore
     [Route("api/users/{userId}/photos")]
     [ApiController]
     public class UserPhotoController : CustomControllerBase
