@@ -7,13 +7,12 @@ using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
-    [Authorize]
+    // [Authorize] // once we are using AspNet Core Identity, we dont need this line anymore
     [Route("api/users/{userId}/[controller]")]
     [ApiController]
     public class MessagesController : CustomControllerBase
@@ -99,7 +98,7 @@ namespace DatingApp.API.Controllers
             if (await _repo.SaveAll())
             {
                 var messageToReturn = _mapper.Map<MessageToReturnDto>(await _repo.GetMessage(message.Id));
-                return CreatedAtRoute(nameof(GetMessage), new { Id = message.Id }, messageToReturn);
+                return CreatedAtRoute(nameof(GetMessage), new { userId = userId, id = message.Id }, messageToReturn);
             }
 
             return BadRequest("Creating the message failed on save");

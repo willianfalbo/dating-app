@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "dotnet run --project ./DatingApp.API/",
-    "watch": "dotnet watch --project ./DatingApp.API/ run",
+    "start:dev": "dotnet run --project ./DatingApp.API/",
+    "start:watch": "dotnet watch --project ./DatingApp.API/ run",
     "migration:add": "cd ./DatingApp.API/ && dotnet ef migrations add",
     "migration:script": "cd ./DatingApp.API/ && dotnet ef migrations script",
     "migration:remove": "cd ./DatingApp.API/ && dotnet ef migrations remove",

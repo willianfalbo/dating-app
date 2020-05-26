@@ -12,13 +12,16 @@
       <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" [routerLink]="['/messages']">Messages</a>
       </li>
+      <li *appHasRole="['Admin', 'Moderator']" class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/admin']">Admin</a>
+      </li>
     </ul>
 
     <span *ngIf="isLoggedIn()" dropdown class="dropdown">
       <span class="mr-1">
         <img src="{{photoUrl}}" alt="">
       </span>
-      <a dropdownToggle (click)="false" aria-controls="basic-link-dropdown" class="dropdown-toggle text-light">Welcome 
+      <a dropdownToggle (click)="false" aria-controls="basic-link-dropdown" class="dropdown-toggle text-light">Welcome
         {{authService.decodedToken?.userName | titlecase}}</a>
       <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="basic-link">
         <li>
