@@ -43,7 +43,7 @@ namespace DatingApp.API.Controllers
         }
 
         [Authorize(Policy = "RequireAdminRole")]
-        [HttpGet("usersWithRoles")]
+        [HttpGet("users-with-roles")]
         public async Task<IActionResult> GetUsersWithRoles()
         {
             var userList = await (from user in _context.Users

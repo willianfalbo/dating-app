@@ -44,6 +44,8 @@ import { ListsComponent } from './lists/lists.component';
 import { ListsResolver } from './lists/lists.resolver';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { LoadingScreenInterceptorProvider } from './_services/loading-screen.interceptor';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/hasRole.directive';
 
 @NgModule({
    declarations: [
@@ -60,7 +62,9 @@ import { LoadingScreenInterceptorProvider } from './_services/loading-screen.int
       MessagesComponent,
       ListsComponent,
       TimeAgoPipe,
-      LoadingScreenComponent
+      LoadingScreenComponent,
+      AdminPanelComponent,
+      HasRoleDirective,
    ],
    imports: [
       BrowserModule,

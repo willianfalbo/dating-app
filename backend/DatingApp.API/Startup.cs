@@ -61,7 +61,7 @@ namespace DatingApp.API
                 });
 
             // to setup authorization policy
-            services.AddAuthorization(options => 
+            services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
@@ -70,8 +70,10 @@ namespace DatingApp.API
 
             // to inject entity framework core
             services.AddDbContext<DataContext>(option =>
-                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-            );
+            {
+                option.UseLazyLoadingProxies();
+                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             // to inject mvc
             services.AddControllers(options =>

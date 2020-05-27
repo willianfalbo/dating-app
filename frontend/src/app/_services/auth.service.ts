@@ -78,7 +78,7 @@ export class AuthService {
       if (!data.unique_name) {
         throw new Error('Expected UserName property');
       }
-      return new DecodedToken(data.nameid, data.unique_name);
+      return new DecodedToken(data.nameid, data.unique_name, data.role);
     }
   }
 
@@ -95,6 +95,18 @@ export class AuthService {
     const userToChange = this._currentUser;
     userToChange.photoUrl = photoUrl;
     this.updateMember(userToChange);
+  }
+
+  roleMatch(allowedRoles): boolean {
+    let isMatch = false;
+    const userRoles = this.decodedToken.role as string[];
+    allowedRoles.forEach(element => {
+      if (userRoles.includes(element)) {
+        isMatch = true;
+        return;
+      }
+    });
+    return isMatch;
   }
 
 }
