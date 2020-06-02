@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run watch",
-    "watch": "ng serve --watch --open",
+    "start:dev": "npm run start:watch",
+    "start:watch": "ng serve --watch --open",
     "build:dev": "ng build --extract-css=false",
     "build:prod": "ng build --prod --extract-css=false",
     "http-server": "cd dist && python -m SimpleHTTPServer 8000"

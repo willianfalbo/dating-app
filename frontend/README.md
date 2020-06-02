@@ -1,6 +1,6 @@
 # Dating App - Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
+The frontend project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
 ## Development server
 
@@ -13,4 +13,5 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ## Environments
 
 Change the `src\environments` folder and point the files to the right path.
+
 Change the `src\app\app.settings.ts` file and point the `whitelistedDomains` / `blacklistedRoutes` to the right path.

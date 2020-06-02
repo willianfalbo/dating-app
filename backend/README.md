@@ -1,6 +1,6 @@
 # Dating App - Backend
 
-This project was initially built using .NET Core 2 and it has been updated to .NET Core 3.0.
+The backend project was initially built using .NET Core 2 and it has been updated to .NET Core 3.0.
 
 ## Database
 
@@ -12,9 +12,9 @@ This project uses SQL Server as the database. For setting up a quick one, please
 
 ## Serve
 
-Run `npm run start` for serving the api.
+Run `npm run start:dev` for serving the api.
 
-Run `npm run watch` for watching changes and serving the api automatically.
+Run `npm run start:watch` for watching changes and serving the api automatically.
 
 ## DB Migrations
 
