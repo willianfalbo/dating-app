@@ -2,7 +2,7 @@ import { UserPhoto } from './userPhoto';
 
 export class User {
     id: number;
-    username: string;
+    userName: string;
     gender: string;
     age: number;
     knownAs: string;
@@ -15,4 +15,5 @@ export class User {
     lookingFor?: string;
     interests?: string;
     photos?: UserPhoto[];
+    roles: string[];
 }
