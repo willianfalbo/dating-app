@@ -54,6 +54,7 @@ export class MemberEditPhotoComponent implements OnInit {
           dateAdded: resp.dateAdded,
           description: resp.description,
           isMain: resp.isMain,
+          isApproved: resp.isApproved,
         };
         this.photos.push(userPhoto);
         if (userPhoto.isMain) {

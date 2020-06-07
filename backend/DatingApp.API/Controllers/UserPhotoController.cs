@@ -63,7 +63,7 @@ namespace DatingApp.API.Controllers
             if (!base.DoesUserMatchWithToken(userId))
                 return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId, true);
 
             var file = userPhotoForCreationDto.File;
             var uploadResult = new ImageUploadResult();
@@ -95,7 +95,7 @@ namespace DatingApp.API.Controllers
                 {
                     var userPhotoForReturnDto = _mapper.Map<UserPhotoForReturnDto>(photo);
 
-                    return CreatedAtRoute(nameof(GetUserPhoto), new { userPhotoId = photo.Id }, userPhotoForReturnDto);
+                    return Ok(userPhotoForReturnDto);
                 }
 
                 return BadRequest("Could not add the photo");
@@ -113,7 +113,7 @@ namespace DatingApp.API.Controllers
             if (!base.DoesUserMatchWithToken(userId))
                 return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId, true);
 
             if (!userFromRepo.Photos.Any(p => p.Id == userPhotoId))
                 return NotFound();
@@ -141,7 +141,7 @@ namespace DatingApp.API.Controllers
             if (!base.DoesUserMatchWithToken(userId))
                 return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId, true);
 
             if (!userFromRepo.Photos.Any(p => p.Id == userPhotoId))
                 return NotFound();
