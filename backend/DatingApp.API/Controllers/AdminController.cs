@@ -20,44 +20,40 @@ namespace DatingApp.API.Controllers
     {
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
-        // private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
-        // private Cloudinary _cloudinary;
-
-        public AdminController(
-            DataContext context,
-            UserManager<User> userManager
-            // IOptions<CloudinarySettings> cloudinaryConfig
-        )
+        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
+        private Cloudinary _cloudinary;
+        public AdminController(DataContext context, UserManager<User> userManager, IOptions<CloudinarySettings> cloudinaryConfig)
         {
-            _context = context;
+            _cloudinaryConfig = cloudinaryConfig;
             _userManager = userManager;
-            // _cloudinaryConfig = cloudinaryConfig;
+            _context = context;
 
-            // Account acc = new Account(
-            //     _cloudinaryConfig.Value.CloudName,
-            //     _cloudinaryConfig.Value.ApiKey,
-            //     _cloudinaryConfig.Value.ApiSecret
-            // );
+            Account acc = new Account(
+                _cloudinaryConfig.Value.CloudName,
+                _cloudinaryConfig.Value.ApiKey,
+                _cloudinaryConfig.Value.ApiSecret
+            );
 
-            // _cloudinary = new Cloudinary(acc);
+            _cloudinary = new Cloudinary(acc);
         }
 
         [Authorize(Policy = "RequireAdminRole")]
         [HttpGet("users-with-roles")]
         public async Task<IActionResult> GetUsersWithRoles()
         {
-            var userList = await (from user in _context.Users
-                                  orderby user.UserName
-                                  select new
-                                  {
-                                      Id = user.Id,
-                                      UserName = user.UserName,
-                                      Roles = (from userRole in user.UserRoles
-                                               join role in _context.Roles
-                                               on userRole.RoleId
-                                               equals role.Id
-                                               select role.Name).ToList()
-                                  }).ToListAsync();
+            var userList = await _context.Users
+                .OrderBy(x => x.UserName)
+                .Select(user => new
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Roles = (from userRole in user.UserRoles
+                             join role in _context.Roles
+                             on userRole.RoleId
+                             equals role.Id
+                             select role.Name).ToList()
+                }).ToListAsync();
+
             return Ok(userList);
         }
 
@@ -85,12 +81,11 @@ namespace DatingApp.API.Controllers
             return Ok(await _userManager.GetRolesAsync(user));
         }
 
-        /*
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("photosForModeration")]
+        [HttpGet("photos-for-moderation")]
         public async Task<IActionResult> GetPhotosForModeration()
         {
-            var photos = await _context.Photos
+            var photos = await _context.UserPhotos
                 .Include(u => u.User)
                 .IgnoreQueryFilters()
                 .Where(p => p.IsApproved == false)
@@ -106,10 +101,10 @@ namespace DatingApp.API.Controllers
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpPost("approvePhoto/{photoId}")]
+        [HttpPost("approve-photo/{photoId}")]
         public async Task<IActionResult> ApprovePhoto(int photoId)
         {
-            var photo = await _context.Photos
+            var photo = await _context.UserPhotos
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(p => p.Id == photoId);
 
@@ -121,10 +116,10 @@ namespace DatingApp.API.Controllers
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpPost("rejectPhoto/{photoId}")]
+        [HttpPost("reject-photo/{photoId}")]
         public async Task<IActionResult> RejectPhoto(int photoId)
         {
-            var photo = await _context.Photos
+            var photo = await _context.UserPhotos
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(p => p.Id == photoId);
 
@@ -139,19 +134,18 @@ namespace DatingApp.API.Controllers
 
                 if (result.Result == "ok")
                 {
-                    _context.Photos.Remove(photo);
+                    _context.UserPhotos.Remove(photo);
                 }
             }
 
             if (photo.PublicId == null)
             {
-                _context.Photos.Remove(photo);
-            }
+                _context.UserPhotos.Remove(photo);
+            };
 
             await _context.SaveChangesAsync();
 
             return Ok();
         }
-        */
     }
 }

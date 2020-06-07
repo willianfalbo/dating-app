@@ -22,4 +22,16 @@ This project uses Entity Framework Core for database migrations.
 
 ** From version 3.0, the .NET SDK does not include the EF tool so we should install it globally. [Breaking Changes - EF 3.0](https://docs.microsoft.com/en-gb/ef/core/what-is-new/ef-core-3.0/breaking-changes#the-ef-core-command-line-tool-dotnet-ef-is-no-longer-part-of-the-net-core-sdk)
 
-`dotnet tool install --global dotnet-ef --version 3.0.0`
+`dotnet tool install --global dotnet-ef`
+
+**Windows WSL (Windows Subsystem For Linux)**
+
+If you are using WSL, you might need to follow the steps below. Otherwise, your terminal may not find the ef installation. * NOTE: Linux users might not face this problem.
+
+- `cd /home/yourUserName`
+
+- Edit the file `.zshrc` and add this line `export PATH="$PATH:$HOME/.dotnet/tools/"`.
+
+- Restart your terminal
+
+References: [Stack Overflow - Cannot find command 'dotnet ef'](https://stackoverflow.com/questions/56862089/cannot-find-command-dotnet-ef)

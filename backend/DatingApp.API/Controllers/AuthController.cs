@@ -55,7 +55,7 @@ namespace DatingApp.API.Controllers
 
             if (result.Succeeded)
             {
-                return CreatedAtRoute("GetUser", new { controller = "User", id = userToReturn.Id }, userToReturn);
+                return Ok(userToReturn);
             }
 
             return BadRequest(result.Errors);

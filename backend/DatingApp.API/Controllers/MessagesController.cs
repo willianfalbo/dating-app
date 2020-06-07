@@ -37,7 +37,7 @@ namespace DatingApp.API.Controllers
             if (messageFromRepo == null)
                 return NotFound();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId, true);
             if (!userFromRepo.MessagesSent.Any(p => p.Id == id) && !userFromRepo.MessagesReceived.Any(p => p.Id == id))
                 return Unauthorized();
 
@@ -88,7 +88,8 @@ namespace DatingApp.API.Controllers
 
             messageForCreationDTO.SenderId = userId;
 
-            if (await _repo.GetUser(messageForCreationDTO.RecipientId) == null)
+			var recipient = await _repo.GetUser(messageForCreationDTO.RecipientId, false);
+            if (recipient == null)
                 return BadRequest("Could not find user");
 
             var message = _mapper.Map<Message>(messageForCreationDTO);
@@ -98,7 +99,7 @@ namespace DatingApp.API.Controllers
             if (await _repo.SaveAll())
             {
                 var messageToReturn = _mapper.Map<MessageToReturnDto>(await _repo.GetMessage(message.Id));
-                return CreatedAtRoute(nameof(GetMessage), new { userId = userId, id = message.Id }, messageToReturn);
+                return Ok(messageToReturn);
             }
 
             return BadRequest("Creating the message failed on save");

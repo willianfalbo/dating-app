@@ -23,13 +23,27 @@ namespace DatingApp.API.Data
         public void Delete<T>(T entity) where T : class
             => _context.Remove(entity);
 
-        public async Task<bool> SaveAll() =>
-            await _context.SaveChangesAsync() >= 0;
+        public async Task<Like> GetLike(int userId, int recipientId) =>
+            await _context.Likes.FirstOrDefaultAsync(u =>
+                u.LikerId == userId && u.LikeeId == recipientId);
 
-        public async Task<User> GetUser(int id) =>
-            await _context.Users
-                // .Include(p => p.Photos)
-                .FirstOrDefaultAsync(u => u.Id == id);
+        public async Task<UserPhoto> GetMainPhotoForUser(int userId) =>
+            await _context.UserPhotos.FirstOrDefaultAsync(p => p.UserId == userId && p.IsMain);
+
+        public async Task<UserPhoto> GetUserPhoto(int userPhotoId) =>
+            await _context.UserPhotos.IgnoreQueryFilters().FirstOrDefaultAsync(p => p.Id == userPhotoId);
+
+        public async Task<User> GetUser(int id, bool isCurrentUser)
+        {
+            var query = _context.Users.Include(p => p.Photos).AsQueryable();
+
+            if (isCurrentUser)
+                query = query.IgnoreQueryFilters();
+
+            var user = await query.FirstOrDefaultAsync(u => u.Id == id);
+
+            return user;
+        }
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
@@ -79,16 +93,6 @@ namespace DatingApp.API.Data
             return await PagedList<User>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<UserPhoto> GetUserPhoto(int userPhotoId) =>
-            await _context.UserPhotos.FirstOrDefaultAsync(p => p.Id == userPhotoId);
-
-        public async Task<UserPhoto> GetMainPhotoForUser(int userId) =>
-            await _context.UserPhotos.FirstOrDefaultAsync(p => p.UserId == userId && p.IsMain);
-
-        public async Task<Like> GetLike(int userId, int recipientId) =>
-            await _context.Likes.FirstOrDefaultAsync(u =>
-                u.LikerId == userId && u.LikeeId == recipientId);
-
         private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
         {
             var query = await _context.Users
@@ -101,6 +105,9 @@ namespace DatingApp.API.Data
             else
                 return query.Likees.Where(u => u.LikerId == id).Select(i => i.LikeeId);
         }
+		
+        public async Task<bool> SaveAll() =>
+            await _context.SaveChangesAsync() >= 0;
 
         public async Task<Message> GetMessage(int id) =>
             await _context.Messages

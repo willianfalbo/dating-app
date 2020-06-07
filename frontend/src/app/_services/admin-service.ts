@@ -6,7 +6,7 @@ import { User } from '../_models/user';
 @Injectable({
   providedIn: 'root'
 })
-export class AdminServiceService {
+export class AdminService {
 
   constructor(private http: HttpClient) { }
 
@@ -18,4 +18,15 @@ export class AdminServiceService {
     return this.http.post(`${DATINGAPP_API_URL}/admin/edit-roles/${user.userName}`, roles);
   }
 
+  getPhotosForApproval() {
+    return this.http.get(`${DATINGAPP_API_URL}/admin/photos-for-moderation`);
+  }
+
+  approvePhoto(photoId) {
+    return this.http.post(`${DATINGAPP_API_URL}/admin/approve-photo/${photoId}`, {});
+  }
+
+  rejectPhoto(photoId) {
+    return this.http.post(`${DATINGAPP_API_URL}/admin/reject-photo/${photoId}`, {});
+  }
 }

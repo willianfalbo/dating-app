@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { User } from '../../_models/user';
-import { AdminServiceService } from '../../_services/admin-service';
+import { AdminService } from '../../_services/admin-service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { RolesModalComponent } from '../roles-modal/roles-modal.component';
 
@@ -15,7 +15,7 @@ export class UserManagementComponent implements OnInit {
   bsModalRef: BsModalRef;
 
   constructor(
-    private adminService: AdminServiceService,
+    private adminService: AdminService,
     private alertify: AlertifyService,
     private modalService: BsModalService) { }
 

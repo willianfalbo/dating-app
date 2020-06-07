@@ -27,7 +27,7 @@ import { AuthService } from './_services/auth.service';
 import { AlertifyService } from './_services/alertify.service';
 import { UserService } from './_services/user.service';
 import { LoadingScreenService } from './_services/loading-screen.service';
-import { AdminServiceService } from './_services/admin-service';
+import { AdminService } from './_services/admin-service';
 
 // resolvers
 import { MemberDetailResolver } from './members/member-detail/member-detail.resolver';
@@ -103,7 +103,7 @@ import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
     AlertifyService,
     UserService,
     LoadingScreenService,
-    AdminServiceService,
+    AdminService,
     MemberDetailResolver,
     MembersResolver,
     MemberEditResolver,

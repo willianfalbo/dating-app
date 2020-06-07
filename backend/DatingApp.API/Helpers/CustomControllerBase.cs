@@ -9,10 +9,14 @@ namespace DatingApp.API.Helpers
         // it is needed in case of cheating user id
         protected bool DoesUserMatchWithToken(int id)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (id != GetUserId())
                 return false;
             else
                 return true;
+        }
+
+        protected int GetUserId() {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }
