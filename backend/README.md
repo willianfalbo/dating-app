@@ -35,3 +35,17 @@ If you are using WSL, you might need to follow the steps below. Otherwise, your 
 - Restart your terminal
 
 References: [Stack Overflow - Cannot find command 'dotnet ef'](https://stackoverflow.com/questions/56862089/cannot-find-command-dotnet-ef)
+
+## Cloudinary
+
+This project uses [Cloudinary](https://cloudinary.com/) for uploading/downloading photos. You could create an account (it is for free). 
+
+On `Settings > Security Tab > Access Keys` you can generate a new pair of `ApiKey` and `ApiSecret`. Then, replace in `appsettings.json` file as follow.
+
+```json
+"CloudinarySettings": {
+  "CloudName": "YourCloudName",
+  "ApiKey": "YourApiKey",
+  "ApiSecret": "YourApiSecret"
+}
+```
