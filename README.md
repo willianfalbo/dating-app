@@ -1,15 +1,47 @@
-# Dating App
+## Dating App
 
-This project was built for studying purpose only.
+A simplified version of an online dating application. It was created for demonstration purpose only.
 
-## Backend
+### Features
 
-The [backend](./backend/README.md) was initially built using .NET Core 2 and it has been updated to .NET Core 3.0.
+- Authentication: Sign-up, login and logout.
+- Profile: Upload your photos and edit your details.
+- Members: Paginated member listing, filters, view member details and photos.
+- Likes: Like other members' profile based on their photos, bio, and common interests.
+- Chat: Private chatting with other members.
+- Admin Area: Approve or reject member photos, and manage user roles (Admin, Moderator, Member, VIP).
 
-## Frontend
+### Quick Preview
 
-The [frontend](./frontend/README.md) was built using Angular 6.
+**Member View**
+<kbd>
+    <img src="./quick-preview.gif">
+</kbd>
 
-## Credits
+**Admin View**
+<kbd>
+    <img src="./quick-preview-admin.gif">
+</kbd>
 
-This App was created based on Neil Cummings' course. [Build an app with ASPNET Core and Angular from scratch](https://trycatchlearn.com/course/build-an-app-with-aspnetcore-and-angular-from-scratch/)
+### Quick Start
+
+- Go to the [backend](./backend) folder and follow the README file instructions.
+
+- Go to the [frontend](./frontend) folder and follow the README file instructions.
+
+### Stack
+
+- Backend
+    - .NET Core 3 & C#
+    - RESTFul APIs
+    - SQL Server database & EF Core 3
+    - JWT authentication
+
+- Frontend
+    - Angular 6+ & Typescript
+    - Reactive Forms & RxJS
+    - Ngx-Bootstrap & Font Awesome
+
+### Credits
+
+This app was created based on [Neil Cummings](https://www.linkedin.com/in/necummings/)' course. [Build an app with ASPNET Core and Angular from scratch](https://trycatchlearn.com/course/build-an-app-with-aspnetcore-and-angular-from-scratch/).

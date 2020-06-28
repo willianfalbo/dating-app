@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UserPhoto } from 'src/app/_models/userPhoto';
 import { FileUploader } from 'ng2-file-upload';
 import { DATINGAPP_API_URL } from 'src/app/app.settings';

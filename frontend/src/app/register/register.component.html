@@ -4,14 +4,14 @@
 
   <div class="form-group text-center">
     <div class="btn-group" btnRadioGroup formControlName="gender">
-      <label btnRadio="male" class="btn btn-light" tabindex="0" role="button">Male</label>
-      <label btnRadio="female" class="btn btn-light" tabindex="0" role="button">Female</label>
-      <label btnRadio="unknown" class="btn btn-light" tabindex="0" role="button">Third Gender</label>
+      <label btnRadio="male" class="btn btn-secondary" tabindex="0" role="button">Male</label>
+      <label btnRadio="female" class="btn btn-secondary" tabindex="0" role="button">Female</label>
+      <label btnRadio="unknown" class="btn btn-secondary" tabindex="0" role="button">Third Gender</label>
     </div>
   </div>
 
   <div class="form-group">
-    <input type="text" 
+    <input type="text"
     [ngClass]="{'is-invalid': hasControlError('username')}"
     class="form-control" formControlName="username" placeholder="Username">
     <div class="invalid-feedback">Please choose a user name</div>
@@ -42,7 +42,7 @@
   </div>
 
   <div class="form-group">
-    <input type="password" 
+    <input type="password"
     [ngClass]="{'is-invalid': hasControlError('password')}"
     class="form-control" formControlName="password" placeholder="Password">
     <div class="invalid-feedback" *ngIf="hasControlError('password', 'required')">Password is required</div>
@@ -51,7 +51,7 @@
   </div>
 
   <div class="form-group">
-    <input type="password" 
+    <input type="password"
     [ngClass]="{'is-invalid': hasControlError('confirmPassword') || hasFormError('mismatch', 'confirmPassword')}"
     class="form-control" formControlName="confirmPassword" placeholder="Confirm Password">
     <div class="invalid-feedback" *ngIf="hasControlError('confirmPassword', 'required')">Confirm Password is required</div>
@@ -60,7 +60,7 @@
 
   <div class="form-group text-center">
     <button class="btn btn-success" [disabled]="!registerForm.valid" type="submit">Register</button>
-    <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
+    <button class="btn btn-link" type="button" (click)="cancel()">Cancel</button>
   </div>
-  
+
 </form>

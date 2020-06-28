@@ -66,9 +66,11 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
             var userFromManager = await _userManager.FindByNameAsync(userForLoginDto.Username);
+            if (userFromManager == null) {
+                return Unauthorized();
+            }
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(userFromManager, userForLoginDto.Password, false);
-
             if (signInResult.Succeeded)
             {
                 var userForListDto = _mapper.Map<UserForListDto>(userFromManager);
