@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Interfaces.Database.Repositories;
 using DatingApp.Core.Models;
@@ -33,7 +33,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
             return user;
         }
 
-        public async Task<PagedResult<User>> GetUsers(UserFilterDto filter)
+        public async Task<PagedResult<User>> GetUsers(UserForFilterDto filter)
         {
             var query = _context.Users
                 .Include(p => p.Photos)

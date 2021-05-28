@@ -1,6 +1,6 @@
 using System;
 
-namespace DatingApp.Core.Dtos
+namespace DatingApp.Core.Dtos.Users
 {
     public class UserForListDto
     {

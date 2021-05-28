@@ -1,6 +1,6 @@
 using System.Linq;
 using AutoMapper;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Helpers;
 

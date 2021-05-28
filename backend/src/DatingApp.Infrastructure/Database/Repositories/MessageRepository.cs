@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.Messages;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Interfaces.Database.Repositories;
 using DatingApp.Core.Models;
@@ -19,7 +19,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-        public async Task<PagedResult<Message>> GetMessagesForUser(MessageFilterDto filter)
+        public async Task<PagedResult<Message>> GetMessagesForUser(MessageForFilterDto filter)
         {
             var query = _context.Messages
                 .Include(u => u.Sender).ThenInclude(p => p.Photos)

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Interfaces.Services;
 using DatingApp.Core.Exceptions;
 using DatingApp.Core.Models;
 using DatingApp.Core.Interfaces.Database;
 using DatingApp.Core.Interfaces;
+using DatingApp.Core.Dtos.Messages;
 
 namespace DatingApp.Core.Services
 {
@@ -25,7 +25,7 @@ namespace DatingApp.Core.Services
         public Task<Message> GetMessage(int id) =>
             _unitOfWork.Messages.GetMessage(id);
 
-        public Task<PagedResult<Message>> GetMessagesForUser(MessageFilterDto filter) =>
+        public Task<PagedResult<Message>> GetMessagesForUser(MessageForFilterDto filter) =>
              _unitOfWork.Messages.GetMessagesForUser(filter);
 
         public Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId) =>

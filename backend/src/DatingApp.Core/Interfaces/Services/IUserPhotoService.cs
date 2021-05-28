@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.UserPhotos;
 using DatingApp.Core.Entities;
 
 namespace DatingApp.Core.Interfaces.Services

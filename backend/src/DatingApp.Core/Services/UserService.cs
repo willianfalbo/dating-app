@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Interfaces;
 using DatingApp.Core.Interfaces.Database;
@@ -26,7 +26,7 @@ namespace DatingApp.Core.Services
         public Task<User> GetUserByUsername(string username) =>
              _unitOfWork.Users.GetUserByUsername(username);
 
-        public Task<PagedResult<User>> GetUsers(UserFilterDto filter) =>
+        public Task<PagedResult<User>> GetUsers(UserForFilterDto filter) =>
             _unitOfWork.Users.GetUsers(filter);
 
         public async Task<User> UpdateUser(int id, UserForUpdateDto userDto)

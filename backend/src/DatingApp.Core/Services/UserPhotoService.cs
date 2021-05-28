@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.UserPhotos;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Exceptions;
 using DatingApp.Core.Interfaces;

@@ -1,6 +1,6 @@
 using System.Linq;
 using AutoMapper;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.Messages;
 using DatingApp.Core.Entities;
 
 namespace DatingApp.Infrastructure.Mapper.Profiles

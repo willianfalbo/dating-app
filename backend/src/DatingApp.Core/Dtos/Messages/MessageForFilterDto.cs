@@ -1,6 +1,6 @@
-namespace DatingApp.Core.Dtos
+namespace DatingApp.Core.Dtos.Messages
 {
-    public class MessageFilterDto
+    public class MessageForFilterDto
     {
         private const int PageSizeLimit = 50;
         public int PageNumber { get; set; } = 1;

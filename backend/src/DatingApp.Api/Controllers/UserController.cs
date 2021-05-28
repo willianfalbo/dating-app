@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.Api.Helpers;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +28,7 @@ namespace DatingApp.Api.Controllers
 
         // api/users
         [HttpGet]
-        public async Task<IActionResult> GetUsers([FromQuery] UserFilterDto filterDto)
+        public async Task<IActionResult> GetUsers([FromQuery] UserForFilterDto filterDto)
         {
             var currentUserId = base.GetUserId();
 

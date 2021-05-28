@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using DatingApp.Core.Dtos.UserPhotos;
 
-namespace DatingApp.Core.Dtos
+namespace DatingApp.Core.Dtos.Users
 {
     public class UserForDetailedDto
     {

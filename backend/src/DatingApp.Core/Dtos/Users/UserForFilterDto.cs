@@ -1,6 +1,6 @@
-namespace DatingApp.Core.Dtos
+namespace DatingApp.Core.Dtos.Users
 {
-    public class UserFilterDto
+    public class UserForFilterDto
     {
         private const int PageSizeLimit = 50;
         public int PageNumber { get; set; } = 1;

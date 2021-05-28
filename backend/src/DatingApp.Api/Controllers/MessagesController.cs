@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DatingApp.Core.Dtos;
 using DatingApp.Api.Helpers;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using DatingApp.Core.Dtos.Messages;
 
 namespace DatingApp.Api.Controllers
 {
@@ -49,7 +49,7 @@ namespace DatingApp.Api.Controllers
 
         // api/users/{userId}/messages
         [HttpGet]
-        public async Task<IActionResult> GetMessageForUser(int userId, [FromQuery] MessageFilterDto filterDto)
+        public async Task<IActionResult> GetMessageForUser(int userId, [FromQuery] MessageForFilterDto filterDto)
         {
             if (!base.DoesUserMatchWithToken(userId))
                 return Unauthorized();

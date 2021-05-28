@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;

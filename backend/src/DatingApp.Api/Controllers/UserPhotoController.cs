@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.UserPhotos;
 using DatingApp.Core.Interfaces;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;

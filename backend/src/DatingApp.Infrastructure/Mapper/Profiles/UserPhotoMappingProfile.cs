@@ -1,5 +1,5 @@
 using AutoMapper;
-using DatingApp.Core.Dtos;
+using DatingApp.Core.Dtos.UserPhotos;
 using DatingApp.Core.Entities;
 
 namespace DatingApp.Infrastructure.Mapper.Profiles
