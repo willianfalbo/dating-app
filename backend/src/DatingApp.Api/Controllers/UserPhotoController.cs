@@ -35,7 +35,7 @@ namespace DatingApp.Api.Controllers
             // if (!base.DoesUserMatchWithToken(userPhotoFromRepo.UserId))
             //     return Unauthorized();
 
-            var userPhotoForReturn = _mapper.To<UserPhotoForReturnDto>(userPhotoFromRepo);
+            var userPhotoForReturn = _mapper.To<UserPhotoToReturnDto>(userPhotoFromRepo);
 
             return Ok(userPhotoForReturn);
         }
@@ -49,7 +49,7 @@ namespace DatingApp.Api.Controllers
 
             var userPhoto = await _service.UploadUserPhoto(userId, userPhotoForCreationDto);
 
-            return Ok(_mapper.To<UserPhotoForReturnDto>(userPhoto));
+            return Ok(_mapper.To<UserPhotoToReturnDto>(userPhoto));
         }
 
         // api/users/{userId}/photos/{userPhotoId}/setMain

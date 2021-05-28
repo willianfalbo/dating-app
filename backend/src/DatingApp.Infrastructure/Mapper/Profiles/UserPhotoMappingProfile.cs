@@ -12,7 +12,7 @@ namespace DatingApp.Infrastructure.Mapper.Profiles
 
             CreateMap<UserPhotoForCreationDto, UserPhoto>();
 
-            CreateMap<UserPhoto, UserPhotoForReturnDto>();
+            CreateMap<UserPhoto, UserPhotoToReturnDto>();
         }
     }
 }

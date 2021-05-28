@@ -2,7 +2,7 @@ using System;
 
 namespace DatingApp.Core.Dtos.UserPhotos
 {
-    public class UserPhotoForReturnDto
+    public class UserPhotoToReturnDto
     {
         public int Id { get; set; }
         public string Url { get; set; }
