@@ -1,17 +1,19 @@
 {
-  "name": "datingapp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start:dev": "dotnet run --project ./DatingApp.API/",
-    "start:watch": "dotnet watch --project ./DatingApp.API/ run",
-    "migration:add": "cd ./DatingApp.API/ && dotnet ef migrations add",
-    "migration:script": "cd ./DatingApp.API/ && dotnet ef migrations script",
-    "migration:remove": "cd ./DatingApp.API/ && dotnet ef migrations remove",
-    "migration:update": "cd ./DatingApp.API/ && dotnet ef database update",
-    "docker:database": "docker-compose up --build"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "datingapp",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "dotnet build",
+        "prestart": "dotnet restore && dotnet clean",
+        "start": "dotnet run --project ./src/DatingApp.Api/",
+        "start:dev": "dotnet run --project ./src/DatingApp.Api/",
+        "start:watch": "dotnet watch --project ./src/DatingApp.Api/ run",
+        "migration:new": "cd ./src/DatingApp.Infrastructure && dotnet ef --startup-project ../DatingApp.Api/DatingApp.Api.csproj migrations add ChangeThisName --output-dir ./Database/Migrations",
+        "migration:script": "cd ./src/DatingApp.Infrastructure && dotnet ef --startup-project ../DatingApp.Api/DatingApp.Api.csproj migrations script",
+        "migration:remove": "cd ./src/DatingApp.Infrastructure && dotnet ef --startup-project ../DatingApp.Api/DatingApp.Api.csproj migrations remove --force",
+        "migration:update": "cd ./src/DatingApp.Infrastructure && dotnet ef --startup-project ../DatingApp.Api/DatingApp.Api.csproj database update"
+    },
+    "author": "",
+    "license": "ISC"
 }

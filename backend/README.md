@@ -1,21 +1,24 @@
 ## Dating App - Backend
 
-The backend project was initially built using .NET Core 2 and it has been updated to .NET Core 3.0.
+The backend project was initially built using .NET Core 2 and it has been updated to DotNet Core 5.0
 
 ### Stack
 
-- .NET Core 3 & C#
-- RESTFul APIs
-- SQL Server database & EF Core 3
-- JWT authentication
+-   DotNet Core 5.0 (C#)
+-   [Clean Architecture / DDD](https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#clean-architecture)
+-   RESTFul APIs
+-   SQL Server database & EF Core
+-   JWT authentication
 
 ### Quick Start
 
-1. Install [.NET Core](https://dotnet.microsoft.com/download) on your machine.
+1. Install [.NET Core 5](https://dotnet.microsoft.com/download) on your machine.
 
-2. Run `dotnet restore` to restore nuget package dependencies.
+2. Run `docker-compose up --build` to spin up a new database. _\*\* You can skip this step if you don't want to use Docker._
 
-3. Make the proper changes in the configuration file "DatingApp.API/appsettings.json".
+    > **IMPORTANT:** Before running above command, make sure you have [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/) installed. \* It runs the **docker-compose.yml** file.
+
+3. Make the proper changes in the configuration file "DatingApp.Api/appsettings.json".
 
     > For **uploading/downloading photos**, you must create an account in [Cloudinary](https://cloudinary.com/). Then, navigate to "Settings > Security Tab > Access Keys" menu, generate a new pair of key `ApiKey/ApiSecret`, and change your config file using the generated tokens.
 
@@ -27,12 +30,7 @@ The backend project was initially built using .NET Core 2 and it has been update
     }
     ```
 
-4. Run `docker-compose up --build` to set up a quick database. _** You can skip this step if you don't want to use Docker._
-
-    > **IMPORTANT:** Before running above command, make sure you have [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/) installed. * It runs the **docker-compose.yml** file.
-
-5. Run `npm run start:dev` for starting the server.
-
+4. Run `npm run start` for starting the server.
 
 ### DB Migrations
 
@@ -44,12 +42,12 @@ This project uses Entity Framework Core for database migrations.
 
 **Windows WSL (Windows Subsystem For Linux)**
 
-If you are using WSL, you might need to follow the steps below. Otherwise, your terminal may not find the EF installation. * NOTE: Linux users might not face this problem.
+If you are using WSL, you might need to follow the steps below. Otherwise, your terminal may not find the EF installation. \* NOTE: Linux users might not face this problem.
 
-- `cd /home/yourUserName`
+-   `cd /home/yourUserName`
 
-- Edit the file `.zshrc` and add this line `export PATH="$PATH:$HOME/.dotnet/tools/"`.
+-   Edit the file `.zshrc` and add this line `export PATH="$PATH:$HOME/.dotnet/tools/"`.
 
-- Restart your terminal
+-   Restart your terminal
 
 References: [Stack Overflow - Cannot find command 'dotnet ef'](https://stackoverflow.com/questions/56862089/cannot-find-command-dotnet-ef)
