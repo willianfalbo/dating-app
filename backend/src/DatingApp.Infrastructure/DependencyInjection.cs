@@ -67,7 +67,7 @@ namespace DatingApp.DI
 
             services.AddDbContext<DatabaseContext>(option =>
             {
-                option.UseLazyLoadingProxies(); // TODO: Remove Lazy Loading
+                // option.UseLazyLoadingProxies(); // not a good practice to allow lazy loading
                 option.UseSqlServer(connection);
             });
         }

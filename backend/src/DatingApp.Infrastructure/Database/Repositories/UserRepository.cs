@@ -17,7 +17,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
         public async Task<User> GetUserByUsername(string username)
         {
             return await _context.Users
-                // .Include(p => p.Photos)
+                .Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.UserName == username);
         }
 
@@ -36,7 +36,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
         public async Task<PagedResult<User>> GetUsers(UserFilterDto filter)
         {
             var query = _context.Users
-                // .Include(p => p.Photos)
+                .Include(p => p.Photos)
                 .OrderByDescending(u => u.LastActive)
                 .AsQueryable();
 
@@ -78,14 +78,14 @@ namespace DatingApp.Infrastructure.Database.Repositories
                 }
             }
 
-            return await FilterAsync(query, filter.PageNumber, filter.PageSize);
+            return await this.PagedFilterAsync(query, filter.PageNumber, filter.PageSize);
         }
 
         private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
         {
             var query = await _context.Users
-                // .Include(u => u.Senders)
-                // .Include(u => u.Receivers)
+                .Include(u => u.LikesSent)
+                .Include(u => u.LikesReceived)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             if (likers)

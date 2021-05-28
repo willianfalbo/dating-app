@@ -5,7 +5,7 @@ The backend project was initially built using .NET Core 2 and it has been update
 ### Stack
 
 -   DotNet Core 5.0 (C#)
--   [Clean Architecture / DDD](https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#clean-architecture)
+-   [Clean Code Architecture / DDD](https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#clean-architecture)
 -   RESTFul APIs
 -   SQL Server database & EF Core
 -   JWT authentication

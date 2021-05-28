@@ -99,7 +99,8 @@ namespace DatingApp.Api.Controllers
 
             var message = await _service.SaveMessage(messageDto);
 
-            var messageToReturn = _mapper.Map<MessageToReturnDto>(await _service.GetMessage(message.Id));
+            var currentMessage = await _service.GetMessage(message.Id);
+            var messageToReturn = _mapper.Map<MessageToReturnDto>(currentMessage);
             return Ok(messageToReturn);
         }
 

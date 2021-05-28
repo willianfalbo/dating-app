@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DatingApp.Core.Interfaces.Database.Repositories;
 using DatingApp.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace DatingApp.Infrastructure.Database.Repositories
 {
@@ -33,46 +34,29 @@ namespace DatingApp.Infrastructure.Database.Repositories
         public async Task<TEntity> FindByIdAsync(object id) =>
             await _context.Set<TEntity>().FindAsync(id);
 
-        public async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> filter, Expression<Func<TEntity, bool>> include = null) =>
-            await _context.Set<TEntity>()
-                .Include(include)
-                .FirstOrDefaultAsync(filter);
+        public async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> filter) =>
+            await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
 
-        public async Task<IEnumerable<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filter, Expression<Func<TEntity, bool>> include = null)
-        {
-            var query = _context.Set<TEntity>().AsQueryable();
-
-            if (filter != null)
-                query = query.Where(filter);
-
-            if (include != null)
-                query = query.Include(include);
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<PagedResult<TEntity>> FilterAsync(
+        /// <inheritdoc/>
+        // implementation based on https://stackoverflow.com/a/63764885/11644167.
+        public async Task<PagedResult<TEntity>> PagedFilterAsync(
             Expression<Func<TEntity, bool>> filter,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> ordination = null,
             int page = 1,
-            int pageSize = 10,
-            Expression<Func<TEntity, bool>> include = null,
-            Expression<Func<TEntity, bool>> orderBy = null,
-            Expression<Func<TEntity, bool>> orderByDescending = null
+            int pageSize = 10
         )
         {
             var query = _context.Set<TEntity>().AsQueryable();
 
-            if (orderBy != null)
-                query = query.OrderBy(orderBy);
+            if (include != null)
+                query = include(query);
 
-            if (orderByDescending != null)
-                query = query.OrderByDescending(orderByDescending);
+            if (ordination != null)
+                query = ordination(query);
 
             if (filter != null)
                 query = query.Where(filter);
-
-            if (include != null)
-                query = query.Include(include);
 
             var count = await query.CountAsync();
             var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -80,7 +64,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
             return new PagedResult<TEntity>(items, count, page, pageSize);
         }
 
-        public async Task<PagedResult<TEntity>> FilterAsync(IQueryable<TEntity> query, int page = 1, int pageSize = 10)
+        public async Task<PagedResult<TEntity>> PagedFilterAsync(IQueryable<TEntity> query, int page = 1, int pageSize = 10)
         {
             var count = await query.CountAsync();
             var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();

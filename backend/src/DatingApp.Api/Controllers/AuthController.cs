@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.Core.Dtos;
 using DatingApp.Core.Entities;
+using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,18 +23,21 @@ namespace DatingApp.Api.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
         public AuthController(
             IConfiguration config,
             IMapper mapper,
+            IUserService userService,
             UserManager<User> userManager,
             SignInManager<User> signInManager
         )
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
         }
@@ -64,11 +68,9 @@ namespace DatingApp.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
-            var userFromManager = await _userManager.FindByNameAsync(userForLoginDto.Username);
+            var userFromManager = await _userService.GetUserByUsername(userForLoginDto.Username);
             if (userFromManager == null)
-            {
                 return Unauthorized();
-            }
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(userFromManager, userForLoginDto.Password, false);
             if (signInResult.Succeeded)
