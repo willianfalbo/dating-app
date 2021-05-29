@@ -15,12 +15,12 @@ A simplified version of an online dating application. It was created for demonst
 
 **Member View**
 <kbd>
-    <img src="./quick-preview.gif">
+<img src="./quick-preview.gif">
 </kbd>
 
 **Admin View**
 <kbd>
-    <img src="./quick-preview-admin.gif">
+<img src="./quick-preview-admin.gif">
 </kbd>
 
 ### Quick Start
@@ -32,15 +32,17 @@ A simplified version of an online dating application. It was created for demonst
 ### Stack
 
 - Backend
-    - .NET Core 3 & C#
-    - RESTFul APIs
-    - SQL Server database & EF Core 3
-    - JWT authentication
+
+  - .NET Core 5 & C#
+  - [Clean Code Architecture / DDD](https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#clean-architecture)
+  - RESTFul APIs
+  - SQL Server database & EF Core
+  - JWT authentication
 
 - Frontend
-    - Angular 6+ & Typescript
-    - Reactive Forms & RxJS
-    - Ngx-Bootstrap & Font Awesome
+  - Angular 6+ & Typescript
+  - Reactive Forms & RxJS
+  - Ngx-Bootstrap & Font Awesome
 
 ### Credits
 

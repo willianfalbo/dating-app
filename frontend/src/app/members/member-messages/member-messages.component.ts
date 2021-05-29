@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Message } from 'src/app/_models/message';
 import { UserService } from 'src/app/_services/user.service';
 import { AuthService } from 'src/app/_services/auth.service';
@@ -14,6 +14,7 @@ export class MemberMessagesComponent implements OnInit {
   @Input() recipientId: number;
   messages: Message[];
   newMessage: any = {};
+  @ViewChild('cardBody') private myScrollContainer: ElementRef;
 
   constructor(private userService: UserService,
     private authService: AuthService, private alertify: AlertifyService) { }
@@ -29,7 +30,7 @@ export class MemberMessagesComponent implements OnInit {
         this.messages = messages;
         // mark sender's messages as read
         this.userService.markSenderMessagesAsRead(userId, this.recipientId)
-          .subscribe(response => {}, error => {
+          .subscribe(response => { }, error => {
             this.alertify.error(error);
           });
       }, error => {
@@ -41,11 +42,18 @@ export class MemberMessagesComponent implements OnInit {
     this.newMessage.recipientId = this.recipientId;
     this.userService.sendMessage(+this.authService.decodedToken.userId, this.newMessage)
       .subscribe((message: Message) => {
-        this.messages.unshift(message);
+        this.messages.push(message);
         this.newMessage.content = '';
+        this.scrollToBottom();
       }, error => {
         this.alertify.error(error);
       });
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) { }
   }
 
 }
