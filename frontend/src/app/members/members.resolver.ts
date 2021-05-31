@@ -10,37 +10,37 @@ import { catchError } from 'rxjs/operators';
 @Injectable()
 export class MembersResolver implements Resolve<User[]> {
 
-    pageNumber = 1;
-    pageSize = 5;
-    user: User;
-    userParams: any = {};
+  pageNumber = 1;
+  pageSize = 5;
+  user: User;
+  userParams: any = {};
 
-    constructor(private userService: UserService, private authService: AuthService,
-        private router: Router, private alertify: AlertifyService) { }
+  constructor(private userService: UserService, private authService: AuthService,
+    private router: Router, private alertify: AlertifyService) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User[]> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User[]> {
 
-        this.setDefaultFilters();
+    this.setDefaultFilters();
 
-        return this.userService.getUsers(this.pageNumber, this.pageSize, this.userParams).pipe(
-            catchError(error => {
-                this.alertify.error('Problem retrieving data');
-                this.router.navigate(['/home']);
-                return of(null);
-            })
-        );
+    return this.userService.getUsers(this.pageNumber, this.pageSize, this.userParams).pipe(
+      catchError(error => {
+        this.alertify.error('Problem retrieving data.');
+        this.router.navigate(['/home']);
+        return of(null);
+      })
+    );
+  }
+
+  private setDefaultFilters() {
+    this.user = this.authService.currentUser;
+
+    if (this.user.gender === 'unknown') {
+      this.userParams.gender = 'unknown';
+    } else {
+      this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
     }
-
-    private setDefaultFilters() {
-        this.user = this.authService.currentUser;
-
-        if (this.user.gender === 'unknown') {
-            this.userParams.gender = 'unknown';
-        } else {
-            this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
-        }
-        this.userParams.minAge = 18;
-        this.userParams.maxAge = 99;
-        this.userParams.orderBy = 'lastActive';
-    }
+    this.userParams.minAge = 18;
+    this.userParams.maxAge = 99;
+    this.userParams.orderBy = 'lastActive';
+  }
 }

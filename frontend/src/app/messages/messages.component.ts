@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { AuthService } from '../_services/auth.service';
+import { MessagesService } from '../_services/messages.service';
 
 import { Message } from '../_models/message';
 import { Pagination, PaginatedResult } from '../_models/pagination';
@@ -19,8 +18,11 @@ export class MessagesComponent implements OnInit {
   pagination: Pagination;
   messageContainer: any = 'Unread';
 
-  constructor(private userService: UserService, private authService: AuthService,
-    private route: ActivatedRoute, private alertify: AlertifyService) { }
+  constructor(
+    private messagesService: MessagesService,
+    private route: ActivatedRoute,
+    private alertify: AlertifyService
+  ) { }
 
   ngOnInit() {
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
@@ -31,9 +33,8 @@ export class MessagesComponent implements OnInit {
   }
 
   loadMessages() {
-    this.userService
-      .getMessages(+this.authService.decodedToken.userId, this.pagination.currentPage,
-        this.pagination.itemsPerPage, this.messageContainer)
+    this.messagesService
+      .getMessages(this.pagination.currentPage, this.pagination.itemsPerPage, this.messageContainer)
       .subscribe(
         (res: PaginatedResult<Message[]>) => {
           this.messages = res.result;
@@ -44,11 +45,11 @@ export class MessagesComponent implements OnInit {
       );
   }
 
-  deleteMessage(id: number) {
+  deleteMessage(messageId: number) {
     this.alertify.confirm('Are you sure you want to delete this message?', () => {
-      this.userService.deleteMessage(+this.authService.decodedToken.userId, id).subscribe(() => {
-        this.messages.splice(this.messages.findIndex(m => m.id === id), 1);
-        this.alertify.success('Message has been deleted');
+      this.messagesService.deleteMessage(messageId).subscribe(() => {
+        this.messages.splice(this.messages.findIndex(m => m.id === messageId), 1);
+        this.alertify.success('Message has been deleted.');
       }, error => {
         this.alertify.error(error);
       });

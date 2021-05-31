@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Message } from 'src/app/_models/message';
-import { UserService } from 'src/app/_services/user.service';
-import { AuthService } from 'src/app/_services/auth.service';
+
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { MessagesService } from 'src/app/_services/messages.service';
 
 @Component({
   selector: 'app-member-messages',
@@ -16,20 +16,21 @@ export class MemberMessagesComponent implements OnInit {
   newMessage: any = {};
   @ViewChild('cardBody') private myScrollContainer: ElementRef;
 
-  constructor(private userService: UserService,
-    private authService: AuthService, private alertify: AlertifyService) { }
+  constructor(
+    private messagesService: MessagesService,
+    private alertify: AlertifyService
+  ) { }
 
   ngOnInit() {
     this.loadMessages();
   }
 
   loadMessages() {
-    const userId = +this.authService.decodedToken.userId;
-    this.userService.getMessagesThread(userId, this.recipientId)
+    this.messagesService.getMessagesThread(this.recipientId)
       .subscribe(messages => {
         this.messages = messages;
         // mark sender's messages as read
-        this.userService.markSenderMessagesAsRead(userId, this.recipientId)
+        this.messagesService.markSenderMessagesAsRead(this.recipientId)
           .subscribe(response => { }, error => {
             this.alertify.error(error);
           });
@@ -40,7 +41,7 @@ export class MemberMessagesComponent implements OnInit {
 
   sendMessage() {
     this.newMessage.recipientId = this.recipientId;
-    this.userService.sendMessage(+this.authService.decodedToken.userId, this.newMessage)
+    this.messagesService.sendMessage(this.newMessage)
       .subscribe((message: Message) => {
         this.messages.push(message);
         this.newMessage.content = '';

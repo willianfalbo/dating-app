@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Pagination, PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
-import { AuthService } from '../_services/auth.service';
 import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
 
@@ -18,8 +17,11 @@ export class ListsComponent implements OnInit {
   pagination: Pagination;
   likesParam: any = 'Likers';
 
-  constructor(private authService: AuthService, private userService: UserService,
-    private route: ActivatedRoute, private alertify: AlertifyService) { }
+  constructor(
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private alertify: AlertifyService
+  ) { }
 
   ngOnInit() {
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page

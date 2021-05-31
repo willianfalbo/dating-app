@@ -26,8 +26,10 @@ import { HasRoleDirective } from './_directives/hasRole.directive';
 import { AuthService } from './_services/auth.service';
 import { AlertifyService } from './_services/alertify.service';
 import { UserService } from './_services/user.service';
-import { LoadingScreenService } from './_services/loading-screen.service';
 import { AdminService } from './_services/admin-service';
+import { PhotosService } from './_services/photos.service';
+import { MessagesService } from './_services/messages.service';
+import { LoadingScreenService } from './_services/loading-screen.service';
 
 // resolvers
 import { MemberDetailResolver } from './members/member-detail/member-detail.resolver';
@@ -102,8 +104,10 @@ import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
     AuthService,
     AlertifyService,
     UserService,
-    LoadingScreenService,
     AdminService,
+    PhotosService,
+    MessagesService,
+    LoadingScreenService,
     MemberDetailResolver,
     MembersResolver,
     MemberEditResolver,

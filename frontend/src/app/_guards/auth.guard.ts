@@ -8,7 +8,11 @@ import { AlertifyService } from '../_services/alertify.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router, private alertify: AlertifyService) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private alertify: AlertifyService
+  ) { }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (this.authService.isLoggedIn()) {
@@ -16,13 +20,13 @@ export class AuthGuard implements CanActivate {
       if (roles) {
         const match = this.authService.roleMatch(roles);
         if (!match) {
-          this.alertify.error('You are not authorized to access this area');
+          this.alertify.error('You are not authorized to access this area.');
           this.router.navigate(['members']);
         }
       }
       return true;
     } else {
-      this.alertify.error('You must sigin to access this page');
+      this.alertify.error('You must sigin to access this page.');
       this.router.navigate(['/home']);
       return false;
     }

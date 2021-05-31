@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
+// this service was created based on
+// https://nezhar.com/blog/create-a-loading-screen-for-angular-apps/
 @Injectable({
   providedIn: 'root'
 })
-// this service was created based on
-// https://nezhar.com/blog/create-a-loading-screen-for-angular-apps/
 export class LoadingScreenService {
 
   constructor() { }

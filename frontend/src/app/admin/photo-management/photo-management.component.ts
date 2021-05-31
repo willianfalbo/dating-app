@@ -27,7 +27,7 @@ export class PhotoManagementComponent implements OnInit {
   approvePhoto(photoId) {
     this.adminService.approvePhoto(photoId).subscribe(() => {
       this.photos.splice(this.photos.findIndex(p => p.id === photoId), 1);
-      this.alertify.success('Photo has been approved');
+      this.alertify.success('Photo has been approved.');
     }, error => {
       this.alertify.error(error);
     });
@@ -36,7 +36,7 @@ export class PhotoManagementComponent implements OnInit {
   rejectPhoto(photoId) {
     this.adminService.rejectPhoto(photoId).subscribe(() => {
       this.photos.splice(this.photos.findIndex(p => p.id === photoId), 1);
-      this.alertify.success('Photo has been rejected');
+      this.alertify.success('Photo has been rejected.');
     }, error => {
       this.alertify.error(error);
     });

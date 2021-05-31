@@ -8,7 +8,8 @@ import { map } from 'rxjs/operators';
 import { DATINGAPP_API_URL, TOKEN_NAME, USER_OBJECT_NAME } from '../app.settings';
 import { DecodedToken } from '../_models/decoded-token.model';
 import { User } from '../_models/user';
-import { UserService } from './user.service';
+
+import { Helper } from './helper';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class AuthService {
   currentUserBehavior = new BehaviorSubject<User>(new User());
   currentUserObservable = this.currentUserBehavior.asObservable();
 
-  constructor(private http: HttpClient, private userService: UserService) { }
+  constructor(private http: HttpClient) { }
 
   login(model: any) {
     return this.http.post(`${DATINGAPP_API_URL}/auth/login`, model).pipe(
@@ -73,17 +74,17 @@ export class AuthService {
     if (token) {
       const data = this.jwtHelper.decodeToken(token);
       if (!data.nameid) {
-        throw new Error('Expected UserId property');
+        throw new Error('Expected UserId property.');
       }
       if (!data.unique_name) {
-        throw new Error('Expected UserName property');
+        throw new Error('Expected UserName property.');
       }
       return new DecodedToken(data.nameid, data.unique_name, data.role);
     }
   }
 
   updateMember(user: User) {
-    user = this.userService.checkUserPhoto(user);
+    user = Helper.checkUserPhoto(user);
     // change user's information in local storage
     this._currentUser = user;
     localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(this._currentUser));

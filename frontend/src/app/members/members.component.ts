@@ -24,8 +24,12 @@ export class MembersComponent implements OnInit {
   userParams: any = {};
   pagination: Pagination;
 
-  constructor(private route: ActivatedRoute, private userService: UserService,
-    private alertify: AlertifyService, private authService: AuthService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private alertify: AlertifyService,
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page

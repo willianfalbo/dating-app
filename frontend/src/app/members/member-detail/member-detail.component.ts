@@ -7,7 +7,6 @@ import { TabsetComponent } from 'ngx-bootstrap';
 import { User } from 'src/app/_models/user';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { UserService } from 'src/app/_services/user.service';
-import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -21,8 +20,11 @@ export class MemberDetailComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
 
-  constructor(private route: ActivatedRoute, private userService: UserService,
-    private alertify: AlertifyService, private authService: AuthService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private alertify: AlertifyService
+  ) { }
 
   ngOnInit() {
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
@@ -80,8 +82,8 @@ export class MemberDetailComponent implements OnInit {
   }
 
   sendLike(recipientId: number) {
-    this.userService.sendLike(+this.authService.decodedToken.userId, recipientId).subscribe(data => {
-      this.alertify.success(`You have liked ${this.user.knownAs}`);
+    this.userService.sendLike(recipientId).subscribe(data => {
+      this.alertify.success(`You have liked ${this.user.knownAs}.`);
     }, error => {
       this.alertify.error(error);
     });
