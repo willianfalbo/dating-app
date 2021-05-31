@@ -9,6 +9,7 @@ The backend project was initially built using .NET Core 2 and it has been update
 -   RESTFul APIs
 -   SQL Server database & EF Core
 -   JWT authentication
+-   Swagger
 
 ### Quick Start
 

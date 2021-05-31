@@ -17,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     [AllowAnonymous]
     public class AuthController : CustomControllerBase
@@ -45,12 +45,12 @@ namespace DatingApp.Api.Controllers
 
         // api/auth/register
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
+        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userDto)
         {
-            var userToCreate = _mapper.To<User>(userForRegisterDto);
-            var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
+            var user = _mapper.To<User>(userDto);
+            var result = await _userManager.CreateAsync(user, userDto.Password);
 
-            var userToReturn = _mapper.To<UserForDetailedDto>(userToCreate);
+            var userToReturn = _mapper.To<UserForDetailedDto>(user);
 
             if (result.Succeeded)
                 return Ok(userToReturn);

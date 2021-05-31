@@ -12,7 +12,7 @@ using DatingApp.Api.Helpers;
 namespace DatingApp.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/admin")]
     public class AdminController : CustomControllerBase
     {
         private readonly IUserRolesService _userRolesService;

@@ -33,7 +33,7 @@ namespace DatingApp.Core.Services
         {
             var user = await this.GetUser(id, true);
 
-            _mapper.To(userDto, user);
+            _mapper.FromTo(userDto, user);
 
             await _unitOfWork.CommitAsync();
 

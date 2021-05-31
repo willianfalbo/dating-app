@@ -38,6 +38,7 @@ A simplified version of an online dating application. It was created for demonst
   - RESTFul APIs
   - SQL Server database & EF Core
   - JWT authentication
+  - Swagger
 
 - Frontend
   - Angular 6+ & Typescript

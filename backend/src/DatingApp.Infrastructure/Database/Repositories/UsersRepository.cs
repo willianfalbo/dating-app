@@ -79,20 +79,20 @@ namespace DatingApp.Infrastructure.Database.Repositories
 
             query = query.Where(u => u.Id != userId);
 
-            var likeIds = await GetIdsUserLikes(userId, filter.Senders);
+            var likeIds = await GetIdsUserLikes(userId, filter.FilterSender);
             query = query.Where(u => likeIds.Contains(u.Id));
 
             return await this.PagedFilterAsync(query, filter.PageNumber, filter.PageSize);
         }
 
-        private async Task<IEnumerable<int>> GetIdsUserLikes(int userId, bool senders = true)
+        private async Task<IEnumerable<int>> GetIdsUserLikes(int userId, bool filterSender = true)
         {
             var query = await _context.Users
                 .Include(u => u.LikesSent)
                 .Include(u => u.LikesReceived)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (senders)
+            if (filterSender)
                 return query.LikesSent.Where(u => u.ReceiverId == userId).Select(i => i.SenderId);
             else
                 return query.LikesReceived.Where(u => u.SenderId == userId).Select(i => i.ReceiverId);

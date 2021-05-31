@@ -10,6 +10,6 @@ namespace DatingApp.Core.Dtos.Likes
             get { return _pageSize; }
             set { _pageSize = (value > PageSizeLimit) ? PageSizeLimit : value; }
         }
-        public bool Senders { get; set; } = true;
+        public bool FilterSender { get; set; } = true;
     }
 }
