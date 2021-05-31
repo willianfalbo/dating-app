@@ -4,10 +4,10 @@ using DatingApp.Core.Entities;
 
 namespace DatingApp.Core.Interfaces.Database.Repositories
 {
-    public interface IUserPhotoRepository : IRepository<UserPhoto>
+    public interface IPhotosRepository : IRepository<Photo>
     {
-        Task<UserPhoto> GetMainPhotoForUser(int userId);
-        Task<UserPhoto> GetUserPhoto(int photoId);
+        Task<Photo> GetMainPhoto(int userId);
+        Task<Photo> GetPhoto(int photoId);
         Task<IEnumerable<object>> GetPhotosForModeration();
     }
 }

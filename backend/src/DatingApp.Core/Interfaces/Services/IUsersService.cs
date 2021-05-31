@@ -5,11 +5,11 @@ using DatingApp.Core.Models;
 
 namespace DatingApp.Core.Interfaces.Services
 {
-    public interface IUserService
+    public interface IUsersService
     {
         Task<User> GetUserByUsername(string username);
         Task<User> GetUser(int id, bool isCurrentUser);
-        Task<PagedResult<User>> GetUsers(UserForFilterDto filter);
+        Task<PagedResult<User>> GetUsers(int userId, UserForFilterDto filter);
         Task<User> UpdateUser(int id, UserForUpdateDto userDto);
         Task UpdateUserActivity(int id);
     }

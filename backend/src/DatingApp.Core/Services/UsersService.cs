@@ -9,12 +9,12 @@ using DatingApp.Core.Models;
 
 namespace DatingApp.Core.Services
 {
-    public class UserService : IUserService
+    public class UsersService : IUsersService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IClassMapper _mapper;
 
-        public UserService(IUnitOfWork unitOfWork, IClassMapper mapper)
+        public UsersService(IUnitOfWork unitOfWork, IClassMapper mapper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -26,8 +26,8 @@ namespace DatingApp.Core.Services
         public Task<User> GetUserByUsername(string username) =>
              _unitOfWork.Users.GetUserByUsername(username);
 
-        public Task<PagedResult<User>> GetUsers(UserForFilterDto filter) =>
-            _unitOfWork.Users.GetUsers(filter);
+        public Task<PagedResult<User>> GetUsers(int userId, UserForFilterDto filter) =>
+            _unitOfWork.Users.GetUsers(userId, filter);
 
         public async Task<User> UpdateUser(int id, UserForUpdateDto userDto)
         {

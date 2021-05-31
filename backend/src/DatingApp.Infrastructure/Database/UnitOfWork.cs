@@ -14,17 +14,17 @@ namespace DatingApp.Infrastructure.Database
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            Likes = new LikeRepository(_context);
-            Messages = new MessageRepository(_context);
-            UserPhotos = new UserPhotoRepository(_context);
-            Users = new UserRepository(_context);
+            Likes = new LikesRepository(_context);
+            Messages = new MessagesRepository(_context);
+            Photos = new PhotosRepository(_context);
+            Users = new UsersRepository(_context);
             UserRoles = new UserRolesRepository(_context);
         }
 
-        public ILikeRepository Likes { get; }
-        public IMessageRepository Messages { get; }
-        public IUserPhotoRepository UserPhotos { get; }
-        public IUserRepository Users { get; }
+        public ILikesRepository Likes { get; }
+        public IMessagesRepository Messages { get; }
+        public IPhotosRepository Photos { get; }
+        public IUsersRepository Users { get; }
         public IUserRolesRepository UserRoles { get; }
 
         public async Task<bool> CommitAsync() =>

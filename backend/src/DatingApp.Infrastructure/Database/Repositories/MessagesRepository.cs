@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Infrastructure.Database.Repositories
 {
-    public class MessageRepository : Repository<Message>, IMessageRepository
+    public class MessagesRepository : Repository<Message>, IMessagesRepository
     {
-        public MessageRepository(DatabaseContext context) : base(context) { }
+        public MessagesRepository(DatabaseContext context) : base(context) { }
 
         public async Task<Message> GetMessage(int id) =>
             await _context.Messages
@@ -19,7 +19,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-        public async Task<PagedResult<Message>> GetMessagesForUser(int userId, MessageForFilterDto filter)
+        public async Task<PagedResult<Message>> GetMessages(int userId, MessageForFilterDto filter)
         {
             var query = _context.Messages
                 .Include(u => u.Sender).ThenInclude(p => p.Photos)

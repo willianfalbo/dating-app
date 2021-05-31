@@ -15,7 +15,7 @@ namespace DatingApp.Api.Helpers
         {
             var resultContext = await next();
 
-            var _service = resultContext.HttpContext.RequestServices.GetService<IUserService>();
+            var _service = resultContext.HttpContext.RequestServices.GetService<IUsersService>();
 
             var userId = int.Parse(resultContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 

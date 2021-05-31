@@ -1,11 +1,11 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace DatingApp.Core.Dtos.UserPhotos
+namespace DatingApp.Core.Dtos.Photos
 {
-    public class UserPhotoForCreationDto
+    public class PhotoForCreationDto
     {
-        public UserPhotoForCreationDto()
+        public PhotoForCreationDto()
         {
             DateAdded = DateTimeOffset.Now;
         }

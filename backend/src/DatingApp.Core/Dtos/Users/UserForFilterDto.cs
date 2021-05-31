@@ -11,7 +11,6 @@ namespace DatingApp.Core.Dtos.Users
             set { _pageSize = (value > PageSizeLimit) ? PageSizeLimit : value; }
         }
 
-        public int UserId { get; set; }
         private string _gender;
         public string Gender
         {
@@ -26,7 +25,5 @@ namespace DatingApp.Core.Dtos.Users
         public int MinAge { get; set; } = 18;
         public int MaxAge { get; set; } = 99;
         public string OrderBy { get; set; }
-        public bool Likees { get; set; } = false;
-        public bool Likers { get; set; } = false;
     }
 }

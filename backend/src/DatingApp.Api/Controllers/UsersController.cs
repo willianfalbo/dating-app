@@ -14,34 +14,26 @@ namespace DatingApp.Api.Controllers
     [ApiController]
     public class UsersController : CustomControllerBase
     {
-        private readonly IUserService _service;
-        private readonly ILikeService _likeService;
+        private readonly IUsersService _service;
+        private readonly ILikesService _likesService;
         private readonly IClassMapper _mapper;
 
-        public UsersController(IUserService service, ILikeService likeService, IClassMapper mapper)
+        public UsersController(IUsersService service, ILikesService likesService, IClassMapper mapper)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _service = service ?? throw new ArgumentNullException(nameof(service));
-            _likeService = likeService ?? throw new ArgumentNullException(nameof(likeService));
+            _likesService = likesService ?? throw new ArgumentNullException(nameof(likesService));
         }
 
         // api/users
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery] UserForFilterDto filterDto)
         {
-            var currentUserId = base.GetUserIdFromToken();
+            var users = await _service.GetUsers(base.GetUserIdFromToken(), filterDto);
 
-            var currentUserFromRepo = await _service.GetUser(currentUserId, true);
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
-            filterDto.UserId = currentUserId;
-
-            var usersFromRepo = await _service.GetUsers(filterDto);
-            var usersForListDto = _mapper.To<IEnumerable<UserForListDto>>(usersFromRepo);
-
-            Response.AddPagination(usersFromRepo.CurrentPage, usersFromRepo.PageSize,
-                usersFromRepo.TotalCount, usersFromRepo.TotalPages);
-
-            return Ok(usersForListDto);
+            return Ok(_mapper.To<IEnumerable<UserForListDto>>(users));
         }
 
         // api/users/{id}
@@ -49,10 +41,9 @@ namespace DatingApp.Api.Controllers
         public async Task<IActionResult> GetUser(int id)
         {
             var isCurrentUser = base.GetUserIdFromToken() == id;
+            var user = await _service.GetUser(id, isCurrentUser);
 
-            var userFromRepo = await _service.GetUser(id, isCurrentUser);
-            var user = _mapper.To<UserForDetailedDto>(userFromRepo);
-            return Ok(user);
+            return Ok(_mapper.To<UserForDetailedDto>(user));
         }
 
         // api/users
@@ -61,14 +52,6 @@ namespace DatingApp.Api.Controllers
         {
             var user = await _service.UpdateUser(base.GetUserIdFromToken(), userDto);
             return Ok(_mapper.To<UserForDetailedDto>(user));
-        }
-
-        // api/users/{recipientId}/like
-        [HttpPost("{recipientId}/like")]
-        public async Task<IActionResult> LikeUser(int recipientId)
-        {
-            await _likeService.LikeUser(base.GetUserIdFromToken(), recipientId);
-            return NoContent();
         }
     }
 }

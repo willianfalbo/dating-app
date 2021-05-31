@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Infrastructure.Database.Repositories
 {
-    public class LikeRepository : Repository<Like>, ILikeRepository
+    public class LikesRepository : Repository<Like>, ILikesRepository
     {
-        public LikeRepository(DatabaseContext context) : base(context) { }
+        public LikesRepository(DatabaseContext context) : base(context) { }
 
         public async Task<Like> GetLike(int userId, int recipientId) =>
-            await _context.Likes.FirstOrDefaultAsync(u =>
+            await _context.Likes
+                .Include(p => p.Receiver)
+                .FirstOrDefaultAsync(u =>
                 u.SenderId == userId && u.ReceiverId == recipientId);
     }
 }

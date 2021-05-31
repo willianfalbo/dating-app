@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos.UserPhotos;
+using DatingApp.Api.Helpers;
+using DatingApp.Core.Dtos.Photos;
 using DatingApp.Core.Interfaces;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +12,14 @@ namespace DatingApp.Api.Controllers
     [ApiController]
     public class PhotosController : CustomControllerBase
     {
-        private readonly IUserPhotoService _service;
-        private readonly IUserService _userService;
+        private readonly IPhotosService _service;
+        private readonly IUsersService _usersService;
         private readonly IClassMapper _mapper;
 
-        public PhotosController(IUserPhotoService service, IUserService userService, IClassMapper mapper)
+        public PhotosController(IPhotosService service, IUsersService usersService, IClassMapper mapper)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -26,20 +27,19 @@ namespace DatingApp.Api.Controllers
         [HttpGet("{photoId}", Name = nameof(GetPhoto))]
         public async Task<IActionResult> GetPhoto(int photoId)
         {
-            var userPhotoFromRepo = await _service.GetUserPhoto(photoId);
-            if (userPhotoFromRepo is null)
+            var photo = await _service.GetPhoto(photoId);
+            if (photo is null)
                 return NotFound($"Could not find the photo '{photoId}'.");
 
-            var userPhotoForReturn = _mapper.To<UserPhotoToReturnDto>(userPhotoFromRepo);
-            return Ok(userPhotoForReturn);
+            return Ok(_mapper.To<PhotoToReturnDto>(photo));
         }
 
         // api/photos
         [HttpPost]
-        public async Task<IActionResult> AddPhoto([FromForm] UserPhotoForCreationDto userPhotoForCreationDto)
+        public async Task<IActionResult> AddPhoto([FromForm] PhotoForCreationDto photoDto)
         {
-            var userPhoto = await _service.UploadUserPhoto(base.GetUserIdFromToken(), userPhotoForCreationDto);
-            return Ok(_mapper.To<UserPhotoToReturnDto>(userPhoto));
+            var photo = await _service.UploadPhoto(base.GetUserIdFromToken(), photoDto);
+            return Ok(_mapper.To<PhotoToReturnDto>(photo));
         }
 
         // api/photos/{photoId}/set-main

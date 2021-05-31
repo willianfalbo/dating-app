@@ -5,13 +5,8 @@ namespace DatingApp.Core.Dtos.Users
 {
     public class UserForRegisterDto
     {
-        public UserForRegisterDto()
-        {
-            Created = DateTimeOffset.Now;
-            LastActive = DateTimeOffset.Now;
-        }
-
         [Required]
+        [StringLength(50, MinimumLength = 4, ErrorMessage = "You must specify a username between 4 and 50 characters.")]
         public string Username { get; set; }
 
         [Required]
@@ -41,8 +36,5 @@ namespace DatingApp.Core.Dtos.Users
 
         [Required]
         public string Country { get; set; }
-
-        public DateTimeOffset Created { get; set; }
-        public DateTimeOffset LastActive { get; set; }
     }
 }

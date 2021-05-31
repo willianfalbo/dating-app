@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using DatingApp.Core.Interfaces.Services;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Dtos;
+using DatingApp.Api.Helpers;
 
 namespace DatingApp.Api.Controllers
 {
@@ -15,13 +16,13 @@ namespace DatingApp.Api.Controllers
     public class AdminController : CustomControllerBase
     {
         private readonly IUserRolesService _userRolesService;
-        private readonly IUserPhotoService _userPhotoService;
+        private readonly IPhotosService _photosService;
         private readonly UserManager<User> _userManager;
 
-        public AdminController(IUserRolesService userRolesService, IUserPhotoService userPhotoService, UserManager<User> userManager)
+        public AdminController(IUserRolesService userRolesService, IPhotosService photosService, UserManager<User> userManager)
         {
             _userRolesService = userRolesService ?? throw new ArgumentNullException(nameof(userRolesService));
-            _userPhotoService = userPhotoService ?? throw new ArgumentNullException(nameof(userPhotoService));
+            _photosService = photosService ?? throw new ArgumentNullException(nameof(photosService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
@@ -29,8 +30,8 @@ namespace DatingApp.Api.Controllers
         [HttpGet("users-with-roles")]
         public async Task<IActionResult> GetUsersWithRoles()
         {
-            var userList = await _userRolesService.GetUsersWithRoles();
-            return Ok(userList);
+            var users = await _userRolesService.GetUsersWithRoles();
+            return Ok(users);
         }
 
         [Authorize(Policy = "RequireAdminRole")]
@@ -61,7 +62,7 @@ namespace DatingApp.Api.Controllers
         [HttpGet("photos-for-moderation")]
         public async Task<IActionResult> GetPhotosForModeration()
         {
-            var photos = await _userPhotoService.GetPhotosForModeration();
+            var photos = await _photosService.GetPhotosForModeration();
             return Ok(photos);
         }
 
@@ -69,7 +70,7 @@ namespace DatingApp.Api.Controllers
         [HttpPost("approve-photo/{photoId}")]
         public async Task<IActionResult> ApprovePhoto(int photoId)
         {
-            await _userPhotoService.ApprovePhoto(photoId);
+            await _photosService.ApprovePhoto(photoId);
             return NoContent();
         }
 
@@ -77,7 +78,7 @@ namespace DatingApp.Api.Controllers
         [HttpPost("reject-photo/{photoId}")]
         public async Task<IActionResult> RejectPhoto(int photoId)
         {
-            await _userPhotoService.RejectPhoto(photoId);
+            await _photosService.RejectPhoto(photoId);
             return NoContent();
         }
     }

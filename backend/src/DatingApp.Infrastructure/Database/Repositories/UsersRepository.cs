@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DatingApp.Core.Dtos.Likes;
 using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Interfaces.Database.Repositories;
@@ -10,9 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Infrastructure.Database.Repositories
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UsersRepository : Repository<User>, IUsersRepository
     {
-        public UserRepository(DatabaseContext context) : base(context) { }
+        public UsersRepository(DatabaseContext context) : base(context) { }
 
         public async Task<User> GetUserByUsername(string username)
         {
@@ -33,29 +34,17 @@ namespace DatingApp.Infrastructure.Database.Repositories
             return user;
         }
 
-        public async Task<PagedResult<User>> GetUsers(UserForFilterDto filter)
+        public async Task<PagedResult<User>> GetUsers(int userId, UserForFilterDto filter)
         {
             var query = _context.Users
                 .Include(p => p.Photos)
                 .OrderByDescending(u => u.LastActive)
                 .AsQueryable();
 
-            query = query.Where(u => u.Id != filter.UserId);
+            query = query.Where(u => u.Id != userId);
 
             if (!string.IsNullOrWhiteSpace(filter.Gender))
                 query = query.Where(u => u.Gender == filter.Gender);
-
-            if (filter.Likers)
-            {
-                var userLikers = await GetUserLikes(filter.UserId, filter.Likers);
-                query = query.Where(u => userLikers.Contains(u.Id));
-            }
-
-            if (filter.Likees)
-            {
-                var userLikees = await GetUserLikes(filter.UserId, filter.Likers);
-                query = query.Where(u => userLikees.Contains(u.Id));
-            }
 
             if (filter.MinAge != 18 || filter.MaxAge != 99)
             {
@@ -81,17 +70,32 @@ namespace DatingApp.Infrastructure.Database.Repositories
             return await this.PagedFilterAsync(query, filter.PageNumber, filter.PageSize);
         }
 
-        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
+        public async Task<PagedResult<User>> GetUserLikes(int userId, LikeForFilterDto filter)
+        {
+            var query = _context.Users
+                .Include(p => p.Photos)
+                .OrderByDescending(u => u.LastActive)
+                .AsQueryable();
+
+            query = query.Where(u => u.Id != userId);
+
+            var likeIds = await GetIdsUserLikes(userId, filter.Senders);
+            query = query.Where(u => likeIds.Contains(u.Id));
+
+            return await this.PagedFilterAsync(query, filter.PageNumber, filter.PageSize);
+        }
+
+        private async Task<IEnumerable<int>> GetIdsUserLikes(int userId, bool senders = true)
         {
             var query = await _context.Users
                 .Include(u => u.LikesSent)
                 .Include(u => u.LikesReceived)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (likers)
-                return query.LikesSent.Where(u => u.ReceiverId == id).Select(i => i.SenderId);
+            if (senders)
+                return query.LikesSent.Where(u => u.ReceiverId == userId).Select(i => i.SenderId);
             else
-                return query.LikesReceived.Where(u => u.SenderId == id).Select(i => i.ReceiverId);
+                return query.LikesReceived.Where(u => u.SenderId == userId).Select(i => i.ReceiverId);
         }
     }
 }

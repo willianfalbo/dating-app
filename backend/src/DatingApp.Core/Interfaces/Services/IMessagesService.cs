@@ -4,13 +4,16 @@ using DatingApp.Core.Dtos.Messages;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Models;
 
-namespace DatingApp.Core.Interfaces.Database.Repositories
+namespace DatingApp.Core.Interfaces.Services
 {
-    public interface IMessageRepository : IRepository<Message>
+    public interface IMessagesService
     {
         Task<Message> GetMessage(int id);
-        Task<PagedResult<Message>> GetMessagesForUser(int userId, MessageForFilterDto filter);
+        Task<PagedResult<Message>> GetMessages(int userId, MessageForFilterDto filter);
         Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId);
         Task<IEnumerable<Message>> GetSenderMessagesThread(int userId, int recipientId);
+        Task<Message> SaveMessage(int userId, MessageForCreationDto messageDto);
+        Task DeleteMessage(int messageId, int userId);
+        Task MarkMessagesOfSenderAsRead(int userId, int recipientId);
     }
 }

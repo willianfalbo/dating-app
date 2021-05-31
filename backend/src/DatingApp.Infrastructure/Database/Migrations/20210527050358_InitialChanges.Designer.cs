@@ -225,7 +225,7 @@ namespace DatingApp.Infrastructure.Database.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("DatingApp.Core.Entities.UserPhoto", b =>
+            modelBuilder.Entity("DatingApp.Core.Entities.Photo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -416,7 +416,7 @@ namespace DatingApp.Infrastructure.Database.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("DatingApp.Core.Entities.UserPhoto", b =>
+            modelBuilder.Entity("DatingApp.Core.Entities.Photo", b =>
                 {
                     b.HasOne("DatingApp.Core.Entities.User", "User")
                         .WithMany("Photos")

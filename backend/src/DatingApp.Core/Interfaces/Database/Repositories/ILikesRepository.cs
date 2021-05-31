@@ -3,7 +3,7 @@ using DatingApp.Core.Entities;
 
 namespace DatingApp.Core.Interfaces.Database.Repositories
 {
-    public interface ILikeRepository : IRepository<Like>
+    public interface ILikesRepository : IRepository<Like>
     {
         Task<Like> GetLike(int userId, int recipientId);
     }

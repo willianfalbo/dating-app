@@ -11,7 +11,7 @@ namespace DatingApp.Infrastructure.Database
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
         // public DbSet<User> Users { get; set; } // once we are using IdentityDbContext, we don't need this line anymore
-        public DbSet<UserPhoto> UserPhotos { get; set; }
+        public DbSet<Photo> Photos { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
 
@@ -23,7 +23,7 @@ namespace DatingApp.Infrastructure.Database
             builder.ApplyConfiguration(new UserRoleMap());
             builder.ApplyConfiguration(new LikeMap());
             builder.ApplyConfiguration(new MessageMap());
-            builder.ApplyConfiguration(new UserPhotoMap());
+            builder.ApplyConfiguration(new PhotoMap());
         }
     }
 }

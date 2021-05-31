@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using DatingApp.Api.Helpers;
 using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Interfaces;
@@ -23,21 +24,21 @@ namespace DatingApp.Api.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IClassMapper _mapper;
-        private readonly IUserService _userService;
+        private readonly IUsersService _usersService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
         public AuthController(
             IConfiguration config,
             IClassMapper mapper,
-            IUserService userService,
+            IUsersService usersService,
             UserManager<User> userManager,
             SignInManager<User> signInManager
         )
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
         }
@@ -47,15 +48,12 @@ namespace DatingApp.Api.Controllers
         public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
         {
             var userToCreate = _mapper.To<User>(userForRegisterDto);
-
             var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
 
             var userToReturn = _mapper.To<UserForDetailedDto>(userToCreate);
 
             if (result.Succeeded)
-            {
                 return Ok(userToReturn);
-            }
 
             return BadRequest(result.Errors);
         }
@@ -64,18 +62,18 @@ namespace DatingApp.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
-            var userFromManager = await _userService.GetUserByUsername(userForLoginDto.Username);
-            if (userFromManager == null)
+            var user = await _usersService.GetUserByUsername(userForLoginDto.Username);
+            if (user == null)
                 return Unauthorized();
 
-            var signInResult = await _signInManager.CheckPasswordSignInAsync(userFromManager, userForLoginDto.Password, false);
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
             if (signInResult.Succeeded)
             {
-                var userForListDto = _mapper.To<UserForListDto>(userFromManager);
+                var userForListDto = _mapper.To<UserForListDto>(user);
 
                 return Ok(new
                 {
-                    token = await GenerateJwtToken(userFromManager),
+                    token = await GenerateJwtToken(user),
                     user = userForListDto,
                 });
             }

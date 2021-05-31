@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AutoMapper;
 using DatingApp.Core.Dtos.Users;
@@ -32,7 +33,9 @@ namespace DatingApp.Infrastructure.Mapper.Profiles
 
             CreateMap<UserForUpdateDto, User>();
 
-            CreateMap<UserForRegisterDto, User>();
+            CreateMap<UserForRegisterDto, User>()
+                .ForMember(dest => dest.Created, opt => { opt.MapFrom(src => DateTimeOffset.Now); })
+                .ForMember(dest => dest.LastActive, opt => { opt.MapFrom(src => DateTimeOffset.Now); });
         }
     }
 }

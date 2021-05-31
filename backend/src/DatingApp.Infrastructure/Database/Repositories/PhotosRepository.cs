@@ -7,22 +7,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Infrastructure.Database.Repositories
 {
-    public class UserPhotoRepository : Repository<UserPhoto>, IUserPhotoRepository
+    public class PhotosRepository : Repository<Photo>, IPhotosRepository
     {
-        public UserPhotoRepository(DatabaseContext context) : base(context) { }
+        public PhotosRepository(DatabaseContext context) : base(context) { }
 
-        public Task<UserPhoto> GetMainPhotoForUser(int userId) =>
-            _context.UserPhotos
+        public Task<Photo> GetMainPhoto(int userId) =>
+            _context.Photos
                 .FirstOrDefaultAsync(p => p.UserId == userId && p.IsMain);
 
-        public Task<UserPhoto> GetUserPhoto(int photoId) =>
-            _context.UserPhotos
+        public Task<Photo> GetPhoto(int photoId) =>
+            _context.Photos
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(p => p.Id == photoId);
 
         public async Task<IEnumerable<object>> GetPhotosForModeration()
         {
-            return await _context.UserPhotos
+            return await _context.Photos
                 .Include(u => u.User)
                 .IgnoreQueryFilters()
                 .Where(p => p.IsApproved == false)

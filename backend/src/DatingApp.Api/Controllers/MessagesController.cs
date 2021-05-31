@@ -15,14 +15,14 @@ namespace DatingApp.Api.Controllers
     [ApiController]
     public class MessagesController : CustomControllerBase
     {
-        private readonly IMessageService _service;
-        private readonly IUserService _userService;
+        private readonly IMessagesService _service;
+        private readonly IUsersService _usersService;
         private readonly IClassMapper _mapper;
 
-        public MessagesController(IMessageService service, IUserService userService, IClassMapper mapper)
+        public MessagesController(IMessagesService service, IUsersService usersService, IClassMapper mapper)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -34,19 +34,18 @@ namespace DatingApp.Api.Controllers
             if (message == null)
                 return NotFound();
 
-            var user = await _userService.GetUser(base.GetUserIdFromToken(), true);
+            var user = await _usersService.GetUser(base.GetUserIdFromToken(), true);
             if (!user.MessagesSent.Any(p => p.Id == id) && !user.MessagesReceived.Any(p => p.Id == id))
                 return Unauthorized();
 
-            var messageToReturn = _mapper.To<MessageToReturnDto>(message);
-            return Ok(messageToReturn);
+            return Ok(_mapper.To<MessageToReturnDto>(message));
         }
 
         // api/messages
         [HttpGet]
         public async Task<IActionResult> GetMessageForUser([FromQuery] MessageForFilterDto filterDto)
         {
-            var messages = await _service.GetMessagesForUser(base.GetUserIdFromToken(), filterDto);
+            var messages = await _service.GetMessages(base.GetUserIdFromToken(), filterDto);
 
             Response.AddPagination(
                 messages.CurrentPage,
@@ -55,8 +54,7 @@ namespace DatingApp.Api.Controllers
                 messages.TotalPages
             );
 
-            var messagesToReturn = _mapper.To<IEnumerable<MessageToReturnDto>>(messages);
-            return Ok(messagesToReturn);
+            return Ok(_mapper.To<IEnumerable<MessageToReturnDto>>(messages));
         }
 
         // api/messages/thread/{recipientId}
@@ -64,9 +62,7 @@ namespace DatingApp.Api.Controllers
         public async Task<IActionResult> GetMessagesThread(int recipientId)
         {
             var messages = await _service.GetMessagesThread(base.GetUserIdFromToken(), recipientId);
-
-            var messagesToReturn = _mapper.To<IEnumerable<MessageToReturnDto>>(messages);
-            return Ok(messagesToReturn);
+            return Ok(_mapper.To<IEnumerable<MessageToReturnDto>>(messages));
         }
 
         // api/messages
@@ -77,8 +73,7 @@ namespace DatingApp.Api.Controllers
 
             var currentMessage = await _service.GetMessage(message.Id);
 
-            var messageToReturn = _mapper.To<MessageToReturnDto>(currentMessage);
-            return Ok(messageToReturn);
+            return Ok(_mapper.To<MessageToReturnDto>(currentMessage));
         }
 
         // api/messages/{id}/delete

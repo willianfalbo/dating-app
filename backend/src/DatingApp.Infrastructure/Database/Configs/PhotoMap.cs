@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DatingApp.Infrastructure.Database.Configs
 {
-    public class UserPhotoMap : IEntityTypeConfiguration<UserPhoto>
+    public class PhotoMap : IEntityTypeConfiguration<Photo>
     {
-        public void Configure(EntityTypeBuilder<UserPhoto> builder)
+        public void Configure(EntityTypeBuilder<Photo> builder)
         {
             builder.HasQueryFilter(p => p.IsApproved);
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatingApp.Core.Dtos.UserPhotos;
+using DatingApp.Core.Dtos.Photos;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Exceptions;
 using DatingApp.Core.Interfaces;
@@ -11,30 +11,30 @@ using DatingApp.Core.Interfaces.Services;
 
 namespace DatingApp.Core.Services
 {
-    public class UserPhotoService : IUserPhotoService
+    public class PhotosService : IPhotosService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IImageUploader _imageUploader;
-        private readonly IUserService _userService;
+        private readonly IUsersService _usersService;
         private readonly IClassMapper _mapper;
 
-        public UserPhotoService(IUnitOfWork unitOfWork, IUserService userService, IImageUploader imageUploader, IClassMapper mapper)
+        public PhotosService(IUnitOfWork unitOfWork, IUsersService usersService, IImageUploader imageUploader, IClassMapper mapper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
             _imageUploader = imageUploader ?? throw new ArgumentNullException(nameof(imageUploader));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public Task<UserPhoto> GetMainPhotoForUser(int userId) =>
-            _unitOfWork.UserPhotos.GetMainPhotoForUser(userId);
+        public Task<Photo> GetMainPhoto(int userId) =>
+            _unitOfWork.Photos.GetMainPhoto(userId);
 
-        public Task<UserPhoto> GetUserPhoto(int photoId) =>
-            _unitOfWork.UserPhotos.GetUserPhoto(photoId);
+        public Task<Photo> GetPhoto(int photoId) =>
+            _unitOfWork.Photos.GetPhoto(photoId);
 
-        public async Task<UserPhoto> UploadUserPhoto(int userId, UserPhotoForCreationDto userDto)
+        public async Task<Photo> UploadPhoto(int userId, PhotoForCreationDto userDto)
         {
-            var user = await _userService.GetUser(userId, true);
+            var user = await _usersService.GetUser(userId, true);
 
             var file = userDto.File;
 
@@ -43,7 +43,7 @@ namespace DatingApp.Core.Services
 
             var uploadResult = await _imageUploader.UploadAsync(file);
 
-            var photo = _mapper.To<UserPhoto>(userDto);
+            var photo = _mapper.To<Photo>(userDto);
             photo.Url = uploadResult.Url;
             photo.PublicId = uploadResult.PublicId;
 
@@ -57,52 +57,49 @@ namespace DatingApp.Core.Services
             return photo;
         }
 
-        public async Task SetMainPhoto(int userId, int userPhotoId)
+        public async Task SetMainPhoto(int userId, int photoId)
         {
-            var userFromRepo = await _userService.GetUser(userId, true);
-
-            if (!userFromRepo.Photos.Any(p => p.Id == userPhotoId))
+            var user = await _usersService.GetUser(userId, true);
+            if (!user.Photos.Any(p => p.Id == photoId))
                 throw new NotFoundException();
 
-            var userPhotoFromRepo = await this.GetUserPhoto(userPhotoId);
-
-            if (userPhotoFromRepo.IsMain)
+            var photo = await this.GetPhoto(photoId);
+            if (photo.IsMain)
                 throw new BadRequestException("This is already the main photo.");
 
-            var currentMainPhoto = await this.GetMainPhotoForUser(userId);
-
+            // unset current main photo
+            var currentMainPhoto = await this.GetMainPhoto(userId);
             currentMainPhoto.IsMain = false;
-            userPhotoFromRepo.IsMain = true;
+
+            photo.IsMain = true;
 
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeletePhoto(int userId, int userPhotoId)
+        public async Task DeletePhoto(int userId, int photoId)
         {
-            var userFromRepo = await _userService.GetUser(userId, true);
-
-            if (!userFromRepo.Photos.Any(p => p.Id == userPhotoId))
+            var user = await _usersService.GetUser(userId, true);
+            if (!user.Photos.Any(p => p.Id == photoId))
                 throw new NotFoundException();
 
-            var userPhotoFromRepo = await this.GetUserPhoto(userPhotoId);
-
-            if (userPhotoFromRepo.IsMain)
+            var photo = await this.GetPhoto(photoId);
+            if (photo.IsMain)
                 throw new BadRequestException("You cannot delete your main photo.");
 
-            if (!string.IsNullOrWhiteSpace(userPhotoFromRepo.PublicId))
-                await _imageUploader.DeleteAsync(userPhotoFromRepo.PublicId);
+            if (!string.IsNullOrWhiteSpace(photo.PublicId))
+                await _imageUploader.DeleteAsync(photo.PublicId);
 
-            _unitOfWork.UserPhotos.Remove(userPhotoFromRepo);
+            _unitOfWork.Photos.Remove(photo);
 
             await _unitOfWork.CommitAsync();
         }
 
         public Task<IEnumerable<object>> GetPhotosForModeration() =>
-            _unitOfWork.UserPhotos.GetPhotosForModeration();
+            _unitOfWork.Photos.GetPhotosForModeration();
 
         public async Task ApprovePhoto(int photoId)
         {
-            var photo = await this.GetUserPhoto(photoId);
+            var photo = await this.GetPhoto(photoId);
             photo.IsApproved = true;
 
             await _unitOfWork.CommitAsync();
@@ -110,7 +107,7 @@ namespace DatingApp.Core.Services
 
         public async Task RejectPhoto(int photoId)
         {
-            var photo = await this.GetUserPhoto(photoId);
+            var photo = await this.GetPhoto(photoId);
 
             if (photo.IsMain)
                 throw new BadRequestException("You cannot reject the main photo.");
@@ -118,7 +115,7 @@ namespace DatingApp.Core.Services
             if (photo.PublicId != null)
                 await _imageUploader.DeleteAsync(photo.PublicId);
 
-            _unitOfWork.UserPhotos.Remove(photo);
+            _unitOfWork.Photos.Remove(photo);
 
             await _unitOfWork.CommitAsync();
         }

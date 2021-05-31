@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DatingApp.Core.Dtos.UserPhotos;
+using DatingApp.Core.Dtos.Photos;
 
 namespace DatingApp.Core.Dtos.Users
 {
@@ -19,6 +19,6 @@ namespace DatingApp.Core.Dtos.Users
         public string Introduction { get; set; }
         public string LookingFor { get; set; }
         public string Interests { get; set; }
-        public ICollection<UserPhotoForDetailedDto> Photos { get; set; }
+        public ICollection<PhotoForDetailedDto> Photos { get; set; }
     }
 }

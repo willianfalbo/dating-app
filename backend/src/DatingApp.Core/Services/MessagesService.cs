@@ -11,24 +11,24 @@ using DatingApp.Core.Dtos.Messages;
 
 namespace DatingApp.Core.Services
 {
-    public class MessageService : IMessageService
+    public class MessagesService : IMessagesService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IClassMapper _mapper;
-        private readonly IUserService _userService;
+        private readonly IUsersService _usersService;
 
-        public MessageService(IUnitOfWork unitOfWork, IClassMapper mapper, IUserService userService)
+        public MessagesService(IUnitOfWork unitOfWork, IClassMapper mapper, IUsersService usersService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
         }
 
         public Task<Message> GetMessage(int id) =>
             _unitOfWork.Messages.GetMessage(id);
 
-        public Task<PagedResult<Message>> GetMessagesForUser(int userId, MessageForFilterDto filter) =>
-             _unitOfWork.Messages.GetMessagesForUser(userId, filter);
+        public Task<PagedResult<Message>> GetMessages(int userId, MessageForFilterDto filter) =>
+             _unitOfWork.Messages.GetMessages(userId, filter);
 
         public Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId) =>
             _unitOfWork.Messages.GetMessagesThread(userId, recipientId);
@@ -38,7 +38,7 @@ namespace DatingApp.Core.Services
 
         public async Task<Message> SaveMessage(int userId, MessageForCreationDto messageDto)
         {
-            var recipient = await _userService.GetUser(messageDto.RecipientId, false);
+            var recipient = await _usersService.GetUser(messageDto.RecipientId, false);
             if (recipient == null)
                 throw new BadRequestException($"Could not find user id '{messageDto.RecipientId}'.");
 
@@ -54,16 +54,16 @@ namespace DatingApp.Core.Services
 
         public async Task DeleteMessage(int messageId, int userId)
         {
-            var messageFromRepo = await this.GetMessage(messageId);
+            var message = await this.GetMessage(messageId);
 
-            if (messageFromRepo.SenderId == userId)
-                messageFromRepo.SenderDeleted = true;
+            if (message.SenderId == userId)
+                message.SenderDeleted = true;
 
-            if (messageFromRepo.RecipientId == userId)
-                messageFromRepo.RecipientDeleted = true;
+            if (message.RecipientId == userId)
+                message.RecipientDeleted = true;
 
-            if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
-                _unitOfWork.Messages.Remove(messageFromRepo);
+            if (message.SenderDeleted && message.RecipientDeleted)
+                _unitOfWork.Messages.Remove(message);
 
             await _unitOfWork.CommitAsync();
         }
@@ -73,9 +73,9 @@ namespace DatingApp.Core.Services
             if (userId == recipientId)
                 throw new UnauthorizedException();
 
-            var messagesFromRepo = await this.GetSenderMessagesThread(userId, recipientId);
+            var messages = await this.GetSenderMessagesThread(userId, recipientId);
 
-            foreach (var message in messagesFromRepo)
+            foreach (var message in messages)
             {
                 // security check
                 if (message.RecipientId != userId)

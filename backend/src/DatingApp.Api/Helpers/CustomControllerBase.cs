@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DatingApp.Api.Controllers
+namespace DatingApp.Api.Helpers
 {
     public class CustomControllerBase : ControllerBase
     {

@@ -6,10 +6,10 @@ namespace DatingApp.Core.Interfaces.Database
 {
     public interface IUnitOfWork : IAsyncDisposable
     {
-        ILikeRepository Likes { get; }
-        IMessageRepository Messages { get; }
-        IUserPhotoRepository UserPhotos { get; }
-        IUserRepository Users { get; }
+        ILikesRepository Likes { get; }
+        IMessagesRepository Messages { get; }
+        IPhotosRepository Photos { get; }
+        IUsersRepository Users { get; }
         IUserRolesRepository UserRoles { get; }
 
         Task<bool> CommitAsync();

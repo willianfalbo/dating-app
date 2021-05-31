@@ -21,7 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.DI
 {
-    public static class DependencyInjection
+    public static class StartupSetup
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
@@ -54,10 +54,10 @@ namespace DatingApp.DI
 
         private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IUserPhotoRepository, UserPhotoRepository>();
-            services.AddTransient<ILikeRepository, LikeRepository>();
-            services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IPhotosRepository, PhotosRepository>();
+            services.AddTransient<ILikesRepository, LikesRepository>();
+            services.AddTransient<IMessagesRepository, MessagesRepository>();
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
@@ -110,7 +110,7 @@ namespace DatingApp.DI
 
         private static void AddAutoMapper(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(DependencyInjection));
+            services.AddAutoMapper(typeof(StartupSetup));
         }
 
         private static void AddServices(IServiceCollection services)
@@ -118,11 +118,11 @@ namespace DatingApp.DI
             services.AddScoped<IClassMapper, ClassMapper>();
             services.AddScoped<IImageUploader, ImageUploader>();
 
-            services.AddScoped<ILikeService, LikeService>();
-            services.AddScoped<IMessageService, MessageService>();
-            services.AddScoped<IUserPhotoService, UserPhotoService>();
+            services.AddScoped<ILikesService, LikesService>();
+            services.AddScoped<IMessagesService, MessagesService>();
+            services.AddScoped<IPhotosService, PhotosService>();
             services.AddScoped<IUserRolesService, UserRolesService>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUsersService, UsersService>();
         }
     }
 }
