@@ -6,12 +6,12 @@ import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.gu
 import { MemberDetailResolver } from './members/member-detail/member-detail.resolver';
 import { MembersResolver } from './members/members.resolver';
 import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
-import { ListsResolver } from './lists/lists.resolver';
+import { LikesResolver } from './likes/likes.resolver';
 import { MessagesResolver } from './messages/messages.resolver';
 
 import { HomeComponent } from './home/home.component';
 import { MembersComponent } from './members/members.component';
-import { ListsComponent } from './lists/lists.component';
+import { LikesComponent } from './likes/likes.component';
 import { MessagesComponent } from './messages/messages.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
@@ -39,7 +39,7 @@ export const ROUTES: Routes = [
         resolve: { userEditResolver: MemberEditResolver }, // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
         canDeactivate: [MemberEditLeaveGuard]
       },
-      { path: 'lists', component: ListsComponent, resolve: { listsResolver: ListsResolver } },
+      { path: 'likes', component: LikesComponent, resolve: { likesResolver: LikesResolver } },
       { path: 'messages', component: MessagesComponent, resolve: { messagesResolver: MessagesResolver } },
       { path: 'admin', component: AdminPanelComponent, data: { roles: ['Admin', 'Moderator'] } },
     ]

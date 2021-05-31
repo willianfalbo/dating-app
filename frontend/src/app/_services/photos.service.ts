@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { DATINGAPP_API_URL } from '../app.settings';
+import { DATINGAPP_API_URL } from '../app.config';
 
 @Injectable({
   providedIn: 'root'

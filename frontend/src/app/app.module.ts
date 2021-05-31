@@ -15,7 +15,7 @@ import { TimeAgoPipe } from 'time-ago-pipe';
 
 // settings / guard / providers / directives
 import { ROUTES } from './app.routes';
-import { JWT_MODULE_OPTIONS } from './app.settings';
+import { JWT_MODULE_OPTIONS } from './app.config';
 import { AuthGuard } from './_guards/auth.guard';
 import { MemberEditLeaveGuard } from './members/member-edit/member-edit.leave.guard';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
@@ -25,10 +25,11 @@ import { HasRoleDirective } from './_directives/hasRole.directive';
 // services
 import { AuthService } from './_services/auth.service';
 import { AlertifyService } from './_services/alertify.service';
-import { UserService } from './_services/user.service';
-import { AdminService } from './_services/admin-service';
+import { UsersService } from './_services/users.service';
+import { AdminService } from './_services/admin.service';
 import { PhotosService } from './_services/photos.service';
 import { MessagesService } from './_services/messages.service';
+import { LikesService } from './_services/likes.service';
 import { LoadingScreenService } from './_services/loading-screen.service';
 
 // resolvers
@@ -36,7 +37,7 @@ import { MemberDetailResolver } from './members/member-detail/member-detail.reso
 import { MembersResolver } from './members/members.resolver';
 import { MemberEditResolver } from './members/member-edit/member-edit.resolver';
 import { MessagesResolver } from './messages/messages.resolver';
-import { ListsResolver } from './lists/lists.resolver';
+import { LikesResolver } from './likes/likes.resolver';
 
 // components
 import { AppComponent } from './app.component';
@@ -50,7 +51,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberEditPhotoComponent } from './members/member-edit-photo/member-edit-photo.component';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 import { MessagesComponent } from './messages/messages.component';
-import { ListsComponent } from './lists/lists.component';
+import { LikesComponent } from './likes/likes.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
@@ -70,7 +71,7 @@ import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
     MemberEditPhotoComponent,
     MemberMessagesComponent,
     MessagesComponent,
-    ListsComponent,
+    LikesComponent,
     TimeAgoPipe,
     LoadingScreenComponent,
     AdminPanelComponent,
@@ -103,15 +104,16 @@ import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
     MemberEditLeaveGuard,
     AuthService,
     AlertifyService,
-    UserService,
+    UsersService,
     AdminService,
     PhotosService,
     MessagesService,
+    LikesService,
     LoadingScreenService,
     MemberDetailResolver,
     MembersResolver,
     MemberEditResolver,
-    ListsResolver,
+    LikesResolver,
     MessagesResolver,
   ],
   entryComponents: [

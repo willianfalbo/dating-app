@@ -32,10 +32,10 @@ export class MemberMessagesComponent implements OnInit {
         // mark sender's messages as read
         this.messagesService.markSenderMessagesAsRead(this.recipientId)
           .subscribe(response => { }, error => {
-            this.alertify.error(error);
+            this.alertify.error(error.error);
           });
       }, error => {
-        this.alertify.error(error);
+        this.alertify.error(error.error);
       });
   }
 
@@ -47,7 +47,7 @@ export class MemberMessagesComponent implements OnInit {
         this.newMessage.content = '';
         this.scrollToBottom();
       }, error => {
-        this.alertify.error(error);
+        this.alertify.error(error.error);
       });
   }
 

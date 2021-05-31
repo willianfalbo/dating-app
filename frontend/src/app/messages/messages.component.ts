@@ -40,7 +40,7 @@ export class MessagesComponent implements OnInit {
           this.messages = res.result;
           this.pagination = res.pagination;
         }, error => {
-          this.alertify.error(error);
+          this.alertify.error(error.error);
         }
       );
   }
@@ -51,7 +51,7 @@ export class MessagesComponent implements OnInit {
         this.messages.splice(this.messages.findIndex(m => m.id === messageId), 1);
         this.alertify.success('Message has been deleted.');
       }, error => {
-        this.alertify.error(error);
+        this.alertify.error(error.error);
       });
     });
   }

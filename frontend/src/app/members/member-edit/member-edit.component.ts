@@ -3,7 +3,7 @@ import { User } from 'src/app/_models/user';
 import { ActivatedRoute } from '@angular/router';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { NgForm } from '@angular/forms';
-import { UserService } from 'src/app/_services/user.service';
+import { UsersService } from 'src/app/_services/users.service';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class MemberEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private userService: UserService,
+    private userService: UsersService,
     private authService: AuthService
   ) { }
 
@@ -56,7 +56,7 @@ export class MemberEditComponent implements OnInit {
         this.alertify.success('Profile updated successfully.');
         this.editForm.reset(this.user);
       }, error => {
-        this.alertify.error(error);
+        this.alertify.error(error.error);
       });
   }
 

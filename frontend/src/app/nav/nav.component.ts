@@ -14,7 +14,11 @@ export class NavComponent implements OnInit {
   model: any = {};
   photoUrl: string;
 
-  constructor(public authService: AuthService, private alertify: AlertifyService, private router: Router) { }
+  constructor(
+    public authService: AuthService,
+    private alertify: AlertifyService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
 
@@ -31,7 +35,7 @@ export class NavComponent implements OnInit {
     this.authService.login(this.model).subscribe(next => {
       this.alertify.success('Logged in successfully.');
     }, error => {
-      this.alertify.error(error);
+      this.alertify.error(error.error);
     }, () => {
       this.router.navigate(['/members']);
     });

@@ -6,7 +6,7 @@ import { TabsetComponent } from 'ngx-bootstrap';
 
 import { User } from 'src/app/_models/user';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { UserService } from 'src/app/_services/user.service';
+import { LikesService } from 'src/app/_services/likes.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -22,7 +22,7 @@ export class MemberDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private userService: UserService,
+    private likesService: LikesService,
     private alertify: AlertifyService
   ) { }
 
@@ -82,10 +82,13 @@ export class MemberDetailComponent implements OnInit {
   }
 
   sendLike(recipientId: number) {
-    this.userService.sendLike(recipientId).subscribe(data => {
+    this.likesService.sendLike(recipientId).subscribe(data => {
       this.alertify.success(`You have liked ${this.user.knownAs}.`);
     }, error => {
-      this.alertify.error(error);
+      if (error.status === 409)
+        this.alertify.warning(error.error);
+      else
+        this.alertify.error(error.error);
     });
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { User } from 'src/app/_models/user';
-import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { LikesService } from 'src/app/_services/likes.service';
 import '../../_shared/extensions/string.extensions';
 
 @Component({
@@ -14,7 +14,7 @@ export class MemberCardComponent implements OnInit {
   @Input() user: User;
 
   constructor(
-    private userService: UserService,
+    private likesService: LikesService,
     private alertify: AlertifyService
   ) { }
 
@@ -22,10 +22,13 @@ export class MemberCardComponent implements OnInit {
   }
 
   sendLike(recipientId: number) {
-    this.userService.sendLike(recipientId).subscribe(data => {
+    this.likesService.sendLike(recipientId).subscribe(data => {
       this.alertify.success(`You have liked ${this.user.knownAs}.`);
     }, error => {
-      this.alertify.error(error);
+      if (error.status === 409)
+        this.alertify.warning(error.error);
+      else
+        this.alertify.error(error.error);
     });
   }
 

@@ -4,7 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 
-import { DATINGAPP_API_URL } from '../app.settings';
+import { DATINGAPP_API_URL } from '../app.config';
 import { User } from '../_models/user';
 import { PaginatedResult } from '../_models/pagination';
 
@@ -13,11 +13,11 @@ import { Helper } from './helper';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UsersService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(pageNumber?: number, pageSize?: number, userParams?: any, likesParam?: string): Observable<PaginatedResult<User[]>> {
+  getUsers(pageNumber?: number, pageSize?: number, userParams?: any): Observable<PaginatedResult<User[]>> {
     const paginatedResult = new PaginatedResult<User[]>();
 
     let params = new HttpParams();
@@ -33,14 +33,6 @@ export class UserService {
       params = params.append('maxAge', userParams.maxAge);
       params = params.append('gender', userParams.gender);
       params = params.append('orderBy', userParams.orderBy);
-    }
-    if (likesParam) {
-      if (likesParam.toLowerCase() === 'likers') {
-        params = params.append('likers', 'true');
-      }
-      if (likesParam.toLowerCase() === 'likees') {
-        params = params.append('likees', 'true');
-      }
     }
 
     return this.http.get<User[]>(`${DATINGAPP_API_URL}/users`, { observe: 'response', params })
@@ -70,10 +62,6 @@ export class UserService {
 
   updateUser(user: User) {
     return this.http.put(`${DATINGAPP_API_URL}/users`, user);
-  }
-
-  sendLike(recipientId: number) {
-    return this.http.post(`${DATINGAPP_API_URL}/users/${recipientId}/like`, {});
   }
 
 }

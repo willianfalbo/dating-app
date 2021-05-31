@@ -19,7 +19,8 @@ export class MessagesResolver implements Resolve<Message[]> {
   constructor(
     private messagesService: MessagesService,
     private router: Router,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService
+  ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Message[]> {
     return this.messagesService.getMessages(this.pageNumber, this.pageSize, this.messageContainer)

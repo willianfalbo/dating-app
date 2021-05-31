@@ -18,8 +18,12 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   bsDatepickerConfig: Partial<BsDatepickerConfig>;
 
-  constructor(private authService: AuthService, private router: Router,
-    private alertify: AlertifyService, private fb: FormBuilder) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private alertify: AlertifyService,
+    private fb: FormBuilder
+  ) { }
 
   ngOnInit() {
     this.bsDatepickerConfig = {
@@ -47,7 +51,7 @@ export class RegisterComponent implements OnInit {
       this.authService.register(this.user).subscribe(() => {
         this.alertify.success('Registration Successful.');
       }, error => {
-        this.alertify.error(error);
+        this.alertify.error(error.error);
       }, () => {
         this.authService.login(this.user).subscribe(() => {
           this.router.navigate(['/members']);

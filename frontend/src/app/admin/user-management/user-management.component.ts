@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { User } from '../../_models/user';
-import { AdminService } from '../../_services/admin-service';
+import { AdminService } from '../../_services/admin.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { RolesModalComponent } from '../roles-modal/roles-modal.component';
 
@@ -27,7 +27,7 @@ export class UserManagementComponent implements OnInit {
     this.adminService.getUsersWithRoles().subscribe((users: User[]) => {
       this.users = users;
     }, error => {
-      this.alertify.error(error);
+      this.alertify.error(error.error);
     })
   }
 
@@ -45,7 +45,7 @@ export class UserManagementComponent implements OnInit {
         this.adminService.updateUserRoles(user, rolesToUpdate).subscribe(() => {
           user.roles = [...rolesToUpdate.roleNames];
         }, error => {
-          this.alertify.error(error);
+          this.alertify.error(error.error);
         })
       }
     });

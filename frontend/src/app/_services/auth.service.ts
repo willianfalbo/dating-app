@@ -5,7 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { DATINGAPP_API_URL, TOKEN_NAME, USER_OBJECT_NAME } from '../app.settings';
+import { DATINGAPP_API_URL, TOKEN_NAME, USER_OBJECT_NAME } from '../app.config';
 import { DecodedToken } from '../_models/decoded-token.model';
 import { User } from '../_models/user';
 

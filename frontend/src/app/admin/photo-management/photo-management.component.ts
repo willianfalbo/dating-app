@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../../_services/admin-service';
+import { AdminService } from '../../_services/admin.service';
 import { AlertifyService } from '../../_services/alertify.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class PhotoManagementComponent implements OnInit {
     this.adminService.getPhotosForApproval().subscribe((photos) => {
       this.photos = photos;
     }, error => {
-      this.alertify.error(error);
+      this.alertify.error(error.error);
     });
   }
 
@@ -29,7 +29,7 @@ export class PhotoManagementComponent implements OnInit {
       this.photos.splice(this.photos.findIndex(p => p.id === photoId), 1);
       this.alertify.success('Photo has been approved.');
     }, error => {
-      this.alertify.error(error);
+      this.alertify.error(error.error);
     });
   }
 
@@ -38,7 +38,7 @@ export class PhotoManagementComponent implements OnInit {
       this.photos.splice(this.photos.findIndex(p => p.id === photoId), 1);
       this.alertify.success('Photo has been rejected.');
     }, error => {
-      this.alertify.error(error);
+      this.alertify.error(error.error);
     });
   }
 

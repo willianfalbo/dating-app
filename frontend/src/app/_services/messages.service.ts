@@ -4,7 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 
-import { DATINGAPP_API_URL } from '../app.settings';
+import { DATINGAPP_API_URL } from '../app.config';
 import { PaginatedResult } from '../_models/pagination';
 import { Message } from '../_models/message';
 

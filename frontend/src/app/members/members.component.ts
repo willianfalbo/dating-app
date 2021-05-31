@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { UserService } from '../_services/user.service';
+import { UsersService } from '../_services/users.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { User } from '../_models/user';
 import { Pagination, PaginatedResult } from '../_models/pagination';
@@ -26,7 +26,7 @@ export class MembersComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private userService: UserService,
+    private userService: UsersService,
     private alertify: AlertifyService,
     private authService: AuthService
   ) { }
@@ -54,7 +54,7 @@ export class MembersComponent implements OnInit {
           this.users = res.result;
           this.pagination = res.pagination;
         }, error => {
-          this.alertify.error(error);
+          this.alertify.error(error.error);
         }
       );
   }

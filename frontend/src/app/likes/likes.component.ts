@@ -3,22 +3,22 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Pagination, PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
-import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { LikesService } from '../_services/likes.service';
 
 @Component({
-  selector: 'app-lists',
-  templateUrl: './lists.component.html',
-  styleUrls: ['./lists.component.css']
+  selector: 'app-likes',
+  templateUrl: './likes.component.html',
+  styleUrls: ['./likes.component.css']
 })
-export class ListsComponent implements OnInit {
+export class LikesComponent implements OnInit {
 
   users: User[];
   pagination: Pagination;
-  likesParam: any = 'Likers';
+  likerKind: any = 'sender';
 
   constructor(
-    private userService: UserService,
+    private likesService: LikesService,
     private route: ActivatedRoute,
     private alertify: AlertifyService
   ) { }
@@ -26,20 +26,20 @@ export class ListsComponent implements OnInit {
   ngOnInit() {
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
     this.route.data.subscribe(data => {
-      this.users = data['listsResolver'].result;
-      this.pagination = data['listsResolver'].pagination;
+      this.users = data['likesResolver'].result;
+      this.pagination = data['likesResolver'].pagination;
     });
   }
 
   loadUsers() {
-    this.userService
-      .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.likesParam)
+    this.likesService
+      .getLikes(this.pagination.currentPage, this.pagination.itemsPerPage, this.likerKind === 'sender')
       .subscribe(
         (res: PaginatedResult<User[]>) => {
           this.users = res.result;
           this.pagination = res.pagination;
         }, error => {
-          this.alertify.error(error);
+          this.alertify.error(error.error);
         }
       );
   }

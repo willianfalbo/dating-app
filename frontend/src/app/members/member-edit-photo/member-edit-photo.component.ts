@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UserPhoto } from 'src/app/_models/userPhoto';
+import { Photo } from 'src/app/_models/photo';
 import { FileUploader } from 'ng2-file-upload';
-import { DATINGAPP_API_URL } from 'src/app/app.settings';
+import { DATINGAPP_API_URL } from 'src/app/app.config';
 
 import { AuthService } from 'src/app/_services/auth.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -14,11 +14,11 @@ import { PhotosService } from 'src/app/_services/photos.service';
 })
 export class MemberEditPhotoComponent implements OnInit {
 
-  @Input() photos: UserPhoto[];
+  @Input() photos: Photo[];
 
   uploader: FileUploader;
   hasBaseDropZoneOver: false;
-  currentMainPhoto: UserPhoto;
+  currentMainPhoto: Photo;
 
   constructor(
     private authService: AuthService,
@@ -50,8 +50,8 @@ export class MemberEditPhotoComponent implements OnInit {
 
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
-        const resp: UserPhoto = JSON.parse(response);
-        const userPhoto: UserPhoto = {
+        const resp: Photo = JSON.parse(response);
+        const photo: Photo = {
           id: resp.id,
           url: resp.url,
           dateAdded: resp.dateAdded,
@@ -59,15 +59,15 @@ export class MemberEditPhotoComponent implements OnInit {
           isMain: resp.isMain,
           isApproved: resp.isApproved,
         };
-        this.photos.push(userPhoto);
-        if (userPhoto.isMain) {
-          this.authService.updateMemberPhoto(userPhoto.url);
+        this.photos.push(photo);
+        if (photo.isMain) {
+          this.authService.updateMemberPhoto(photo.url);
         }
       }
     };
   }
 
-  setMainPhoto(userPhoto: UserPhoto) {
+  setMainPhoto(userPhoto: Photo) {
     this.photosService.setMainPhoto(userPhoto.id)
       .subscribe(next => {
         this.currentMainPhoto = this.photos.filter(p => p.isMain === true)[0];
@@ -76,7 +76,7 @@ export class MemberEditPhotoComponent implements OnInit {
         this.authService.updateMemberPhoto(userPhoto.url);
         this.alertify.success('Successfully set to main.');
       }, error => {
-        this.alertify.error(error);
+        this.alertify.error(error.error);
       });
   }
 
@@ -88,7 +88,7 @@ export class MemberEditPhotoComponent implements OnInit {
           this.photos = this.photos.filter(p => p.id !== userPhotoId);
           this.alertify.success('Photo has been deleted.');
         }, error => {
-          this.alertify.error(error);
+          this.alertify.error(error.error);
         });
     });
   }

@@ -1,10 +1,10 @@
 <div class="container mt-5">
   <div *ngIf="!registerMode" style="text-align: center">
     <h1>Find your match</h1>
-    <p class="lead">Come on in to view your matches... All you need to do is sign up!</p>
+    <p class="lead">Come on in to view your matches... <span *ngIf="!isLoggedIn()">All you need to do is sign up!</span></p>
     <div class="text-center">
       <button class="btn btn-primary btn-lg mr-2" (click)="registerToggle()" *ngIf="!isLoggedIn()">Register</button>
-      <button class="btn btn-info btn-lg">Learn more</button>
+      <button class="btn btn-primary btn-lg mr-2" *ngIf="isLoggedIn()" routerLink="/members">Find Now!</button>
     </div>
   </div>
 
@@ -15,5 +15,5 @@
       </div>
     </div>
   </div>
-  
+
 </div>
