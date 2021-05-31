@@ -1,25 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using DatingApp.Api.Helpers;
 using DatingApp.Core.Dtos.Users;
+using DatingApp.Core.Interfaces;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.Api.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
-    // [Authorize] // once we are using AspNet Core Identity, we dont need this line anymore
     [Route("api/users")]
     [ApiController]
-    public class UserController : CustomControllerBase
+    public class UsersController : CustomControllerBase
     {
         private readonly IUserService _service;
         private readonly ILikeService _likeService;
-        private readonly IMapper _mapper;
+        private readonly IClassMapper _mapper;
 
-        public UserController(IUserService service, ILikeService likeService, IMapper mapper)
+        public UsersController(IUserService service, ILikeService likeService, IClassMapper mapper)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _service = service ?? throw new ArgumentNullException(nameof(service));
@@ -30,14 +29,14 @@ namespace DatingApp.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery] UserForFilterDto filterDto)
         {
-            var currentUserId = base.GetUserId();
+            var currentUserId = base.GetUserIdFromToken();
 
             var currentUserFromRepo = await _service.GetUser(currentUserId, true);
 
             filterDto.UserId = currentUserId;
 
             var usersFromRepo = await _service.GetUsers(filterDto);
-            var usersForListDto = _mapper.Map<IEnumerable<UserForListDto>>(usersFromRepo);
+            var usersForListDto = _mapper.To<IEnumerable<UserForListDto>>(usersFromRepo);
 
             Response.AddPagination(usersFromRepo.CurrentPage, usersFromRepo.PageSize,
                 usersFromRepo.TotalCount, usersFromRepo.TotalPages);
@@ -49,34 +48,26 @@ namespace DatingApp.Api.Controllers
         [HttpGet("{id}", Name = nameof(GetUser))]
         public async Task<IActionResult> GetUser(int id)
         {
-            var isCurrentUser = base.GetUserId() == id;
+            var isCurrentUser = base.GetUserIdFromToken() == id;
 
             var userFromRepo = await _service.GetUser(id, isCurrentUser);
-            var user = _mapper.Map<UserForDetailedDto>(userFromRepo);
+            var user = _mapper.To<UserForDetailedDto>(userFromRepo);
             return Ok(user);
         }
 
-        // api/users/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserForUpdateDto userDto)
+        // api/users
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromBody] UserForUpdateDto userDto)
         {
-            if (!base.DoesUserMatchWithToken(id))
-                return Unauthorized();
-
-            var user = await _service.UpdateUser(id, userDto);
-
-            return Ok(_mapper.Map<UserForDetailedDto>(user));
+            var user = await _service.UpdateUser(base.GetUserIdFromToken(), userDto);
+            return Ok(_mapper.To<UserForDetailedDto>(user));
         }
 
-        // api/users/{userId}/like/{recipientId}
-        [HttpPost("{id}/like/{recipientId}")]
-        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        // api/users/{recipientId}/like
+        [HttpPost("{recipientId}/like")]
+        public async Task<IActionResult> LikeUser(int recipientId)
         {
-            if (!base.DoesUserMatchWithToken(id))
-                return Unauthorized();
-
-            await _likeService.LikeUser(id, recipientId);
-
+            await _likeService.LikeUser(base.GetUserIdFromToken(), recipientId);
             return NoContent();
         }
     }

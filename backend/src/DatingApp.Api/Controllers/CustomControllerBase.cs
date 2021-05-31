@@ -5,17 +5,7 @@ namespace DatingApp.Api.Controllers
 {
     public class CustomControllerBase : ControllerBase
     {
-        // check if the user id parameter matches with the token id
-        // it is needed in case of cheating user id
-        protected bool DoesUserMatchWithToken(int id)
-        {
-            if (id != GetUserId())
-                return false;
-            else
-                return true;
-        }
-
-        protected int GetUserId()
+        protected int GetUserIdFromToken()
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }

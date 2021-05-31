@@ -9,7 +9,7 @@ namespace DatingApp.Core.Interfaces.Database.Repositories
     public interface IMessageRepository : IRepository<Message>
     {
         Task<Message> GetMessage(int id);
-        Task<PagedResult<Message>> GetMessagesForUser(MessageForFilterDto filter);
+        Task<PagedResult<Message>> GetMessagesForUser(int userId, MessageForFilterDto filter);
         Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId);
         Task<IEnumerable<Message>> GetSenderMessagesThread(int userId, int recipientId);
     }

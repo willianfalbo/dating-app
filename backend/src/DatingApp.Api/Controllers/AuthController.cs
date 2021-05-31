@@ -4,9 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
 using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
+using DatingApp.Core.Interfaces;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,14 +22,14 @@ namespace DatingApp.Api.Controllers
     public class AuthController : CustomControllerBase
     {
         private readonly IConfiguration _config;
-        private readonly IMapper _mapper;
+        private readonly IClassMapper _mapper;
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
         public AuthController(
             IConfiguration config,
-            IMapper mapper,
+            IClassMapper mapper,
             IUserService userService,
             UserManager<User> userManager,
             SignInManager<User> signInManager
@@ -44,17 +44,13 @@ namespace DatingApp.Api.Controllers
 
         // api/auth/register
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto) // "FromBody" is not needed anymore as the "ApiController" attribute handle it
+        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
         {
-            // the code below is not needed anymore as the "ApiController" attribute handle it
-            // if(!ModelState.IsValid)
-            //     return BadRequest(ModelState);
-
-            var userToCreate = _mapper.Map<User>(userForRegisterDto);
+            var userToCreate = _mapper.To<User>(userForRegisterDto);
 
             var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+            var userToReturn = _mapper.To<UserForDetailedDto>(userToCreate);
 
             if (result.Succeeded)
             {
@@ -75,7 +71,7 @@ namespace DatingApp.Api.Controllers
             var signInResult = await _signInManager.CheckPasswordSignInAsync(userFromManager, userForLoginDto.Password, false);
             if (signInResult.Succeeded)
             {
-                var userForListDto = _mapper.Map<UserForListDto>(userFromManager);
+                var userForListDto = _mapper.To<UserForListDto>(userFromManager);
 
                 return Ok(new
                 {

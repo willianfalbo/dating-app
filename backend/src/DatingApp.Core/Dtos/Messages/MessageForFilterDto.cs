@@ -11,7 +11,6 @@ namespace DatingApp.Core.Dtos.Messages
             set { _pageSize = (value > PageSizeLimit) ? PageSizeLimit : value; }
         }
 
-        public int UserId { get; set; }
         public string Container { get; set; } = "unread";
     }
 }

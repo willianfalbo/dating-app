@@ -15,18 +15,20 @@ namespace DatingApp.Core.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IClassMapper _mapper;
+        private readonly IUserService _userService;
 
-        public MessageService(IUnitOfWork unitOfWork, IClassMapper mapper)
+        public MessageService(IUnitOfWork unitOfWork, IClassMapper mapper, IUserService userService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
         public Task<Message> GetMessage(int id) =>
             _unitOfWork.Messages.GetMessage(id);
 
-        public Task<PagedResult<Message>> GetMessagesForUser(MessageForFilterDto filter) =>
-             _unitOfWork.Messages.GetMessagesForUser(filter);
+        public Task<PagedResult<Message>> GetMessagesForUser(int userId, MessageForFilterDto filter) =>
+             _unitOfWork.Messages.GetMessagesForUser(userId, filter);
 
         public Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId) =>
             _unitOfWork.Messages.GetMessagesThread(userId, recipientId);
@@ -34,9 +36,14 @@ namespace DatingApp.Core.Services
         public Task<IEnumerable<Message>> GetSenderMessagesThread(int userId, int recipientId) =>
             _unitOfWork.Messages.GetSenderMessagesThread(userId, recipientId);
 
-        public async Task<Message> SaveMessage(MessageForCreationDto messageDto)
+        public async Task<Message> SaveMessage(int userId, MessageForCreationDto messageDto)
         {
+            var recipient = await _userService.GetUser(messageDto.RecipientId, false);
+            if (recipient == null)
+                throw new BadRequestException($"Could not find user id '{messageDto.RecipientId}'.");
+
             var message = _mapper.To<Message>(messageDto);
+            message.SenderId = userId;
 
             _unitOfWork.Messages.Add(message);
 

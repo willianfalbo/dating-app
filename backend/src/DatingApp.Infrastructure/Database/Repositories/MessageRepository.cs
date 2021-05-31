@@ -19,7 +19,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-        public async Task<PagedResult<Message>> GetMessagesForUser(MessageForFilterDto filter)
+        public async Task<PagedResult<Message>> GetMessagesForUser(int userId, MessageForFilterDto filter)
         {
             var query = _context.Messages
                 .Include(u => u.Sender).ThenInclude(p => p.Photos)
@@ -29,16 +29,15 @@ namespace DatingApp.Infrastructure.Database.Repositories
             switch (filter.Container?.ToLower())
             {
                 case "inbox":
-                    query = query.Where(u => u.RecipientId == filter.UserId
+                    query = query.Where(u => u.RecipientId == userId
                         && u.RecipientDeleted == false);
                     break;
                 case "outbox":
-                    query = query.Where(u => u.SenderId == filter.UserId
+                    query = query.Where(u => u.SenderId == userId
                         && u.SenderDeleted == false);
                     break;
-                // unread
                 default:
-                    query = query.Where(u => u.RecipientId == filter.UserId
+                    query = query.Where(u => u.RecipientId == userId
                         && u.RecipientDeleted == false && u.IsRead == false);
                     break;
             }

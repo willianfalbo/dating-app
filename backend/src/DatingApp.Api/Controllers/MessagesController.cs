@@ -2,129 +2,98 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using DatingApp.Api.Helpers;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using DatingApp.Core.Dtos.Messages;
+using DatingApp.Core.Interfaces;
 
 namespace DatingApp.Api.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
-    // [Authorize] // once we are using AspNet Core Identity, we dont need this line anymore
-    [Route("api/users/{userId}/[controller]")]
+    [Route("api/messages")]
     [ApiController]
     public class MessagesController : CustomControllerBase
     {
         private readonly IMessageService _service;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
+        private readonly IClassMapper _mapper;
 
-        public MessagesController(IMessageService service, IUserService userService, IMapper mapper)
+        public MessagesController(IMessageService service, IUserService userService, IClassMapper mapper)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        // api/users/{userId}/messages/{id}
+        // api/messages/{id}
         [HttpGet("{id}", Name = nameof(GetMessage))]
-        public async Task<IActionResult> GetMessage(int userId, int id)
+        public async Task<IActionResult> GetMessage(int id)
         {
-            if (!base.DoesUserMatchWithToken(userId))
-                return Unauthorized();
-
-            var messageFromRepo = await _service.GetMessage(id);
-            if (messageFromRepo == null)
+            var message = await _service.GetMessage(id);
+            if (message == null)
                 return NotFound();
 
-            var userFromRepo = await _userService.GetUser(userId, true);
-            if (!userFromRepo.MessagesSent.Any(p => p.Id == id) && !userFromRepo.MessagesReceived.Any(p => p.Id == id))
+            var user = await _userService.GetUser(base.GetUserIdFromToken(), true);
+            if (!user.MessagesSent.Any(p => p.Id == id) && !user.MessagesReceived.Any(p => p.Id == id))
                 return Unauthorized();
 
-            var messageToReturn = _mapper.Map<MessageToReturnDto>(messageFromRepo);
-
+            var messageToReturn = _mapper.To<MessageToReturnDto>(message);
             return Ok(messageToReturn);
         }
 
-        // api/users/{userId}/messages
+        // api/messages
         [HttpGet]
-        public async Task<IActionResult> GetMessageForUser(int userId, [FromQuery] MessageForFilterDto filterDto)
+        public async Task<IActionResult> GetMessageForUser([FromQuery] MessageForFilterDto filterDto)
         {
-            if (!base.DoesUserMatchWithToken(userId))
-                return Unauthorized();
-
-            filterDto.UserId = userId;
-
-            var messagesFromRepo = await _service.GetMessagesForUser(filterDto);
-
-            var messagesToReturn = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+            var messages = await _service.GetMessagesForUser(base.GetUserIdFromToken(), filterDto);
 
             Response.AddPagination(
-                messagesFromRepo.CurrentPage,
-                messagesFromRepo.PageSize,
-                messagesFromRepo.TotalCount,
-                messagesFromRepo.TotalPages
+                messages.CurrentPage,
+                messages.PageSize,
+                messages.TotalCount,
+                messages.TotalPages
             );
 
+            var messagesToReturn = _mapper.To<IEnumerable<MessageToReturnDto>>(messages);
             return Ok(messagesToReturn);
         }
 
-        // api/users/{userId}/messages/thread/{recipientId}
+        // api/messages/thread/{recipientId}
         [HttpGet("thread/{recipientId}")]
-        public async Task<IActionResult> GetMessagesThread(int userId, int recipientId)
+        public async Task<IActionResult> GetMessagesThread(int recipientId)
         {
-            if (!base.DoesUserMatchWithToken(userId))
-                return Unauthorized();
+            var messages = await _service.GetMessagesThread(base.GetUserIdFromToken(), recipientId);
 
-            var messagesThreadFromRepo = await _service.GetMessagesThread(userId, recipientId);
-
-            var messagesThreadToReturn = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesThreadFromRepo);
-
-            return Ok(messagesThreadToReturn);
+            var messagesToReturn = _mapper.To<IEnumerable<MessageToReturnDto>>(messages);
+            return Ok(messagesToReturn);
         }
 
-        // api/users/{userId}/messages
+        // api/messages
         [HttpPost]
-        public async Task<IActionResult> CreateMessage(int userId, [FromBody] MessageForCreationDto messageDto)
+        public async Task<IActionResult> CreateMessage([FromBody] MessageForCreationDto messageDto)
         {
-            if (!base.DoesUserMatchWithToken(userId))
-                return Unauthorized();
-
-            messageDto.SenderId = userId;
-
-            var recipient = await _userService.GetUser(messageDto.RecipientId, false);
-            if (recipient == null)
-                return BadRequest($"Could not find user {messageDto.RecipientId}.");
-
-            var message = await _service.SaveMessage(messageDto);
+            var message = await _service.SaveMessage(base.GetUserIdFromToken(), messageDto);
 
             var currentMessage = await _service.GetMessage(message.Id);
-            var messageToReturn = _mapper.Map<MessageToReturnDto>(currentMessage);
+
+            var messageToReturn = _mapper.To<MessageToReturnDto>(currentMessage);
             return Ok(messageToReturn);
         }
 
-        // api/users/{userId}/messages/{id}/delete
+        // api/messages/{id}/delete
         [HttpDelete("{id}/delete")]
-        public async Task<IActionResult> DeleteMessage(int userId, int id)
+        public async Task<IActionResult> DeleteMessage(int id)
         {
-            if (!base.DoesUserMatchWithToken(userId))
-                return Unauthorized();
-
-            await _service.DeleteMessage(id, userId);
-
+            await _service.DeleteMessage(id, base.GetUserIdFromToken());
             return NoContent();
         }
 
-        // api/users/{userId}/messages/thread/{recipientId}/mark-as-read
+        // api/messages/thread/{recipientId}/mark-as-read
         [HttpPost("thread/{recipientId}/mark-as-read")]
-        public async Task<IActionResult> MarkMessagesOfSenderAsRead(int userId, int recipientId)
+        public async Task<IActionResult> MarkMessagesOfSenderAsRead(int recipientId)
         {
-            if (!base.DoesUserMatchWithToken(userId))
-                return Unauthorized();
-
-            await _service.MarkMessagesOfSenderAsRead(userId, recipientId);
-
+            await _service.MarkMessagesOfSenderAsRead(base.GetUserIdFromToken(), recipientId);
             return NoContent();
         }
     }
