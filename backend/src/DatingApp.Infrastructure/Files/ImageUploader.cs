@@ -4,7 +4,7 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using DatingApp.Core.Interfaces.Files;
 using DatingApp.Core.Interfaces.Mappers;
-using DatingApp.Core.Models.Image;
+using DatingApp.Core.Models.Files;
 using Microsoft.AspNetCore.Http;
 
 namespace DatingApp.Infrastructure.Files
@@ -20,7 +20,7 @@ namespace DatingApp.Infrastructure.Files
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<UploadedImageResult> UploadAsync(IFormFile file)
+        public async Task<UploadedFileResult> UploadAsync(IFormFile file)
         {
             var result = new ImageUploadResult();
 
@@ -35,7 +35,7 @@ namespace DatingApp.Infrastructure.Files
                 result = await _cloudinary.UploadAsync(uploadParams);
             }
 
-            return _mapper.To<UploadedImageResult>(result);
+            return _mapper.To<UploadedFileResult>(result);
         }
 
         public async Task<DeletedFileResult> DeleteAsync(string publicId)

@@ -1,5 +1,5 @@
 using AutoMapper;
-using Models = DatingApp.Core.Models.Image;
+using Models = DatingApp.Core.Models.Files;
 using Cloudinary = CloudinaryDotNet.Actions;
 
 namespace DatingApp.Infrastructure.Mappers.Profiles
@@ -8,7 +8,7 @@ namespace DatingApp.Infrastructure.Mappers.Profiles
     {
         public ImageMappingProfile()
         {
-            CreateMap<Cloudinary.ImageUploadResult, Models.UploadedImageResult>()
+            CreateMap<Cloudinary.ImageUploadResult, Models.UploadedFileResult>()
                 .ForMember(m => m.Url, opt => opt.MapFrom(c => c.Url.ToString()));
 
             CreateMap<Cloudinary.DeletionResult, Models.DeletedFileResult>();
