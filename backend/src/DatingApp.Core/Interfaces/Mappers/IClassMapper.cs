@@ -1,4 +1,4 @@
-namespace DatingApp.Core.Interfaces
+namespace DatingApp.Core.Interfaces.Mappers
 {
     /// <summary>
     /// Class mapper wrapper.

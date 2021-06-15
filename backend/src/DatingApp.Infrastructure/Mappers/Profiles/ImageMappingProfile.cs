@@ -2,7 +2,7 @@ using AutoMapper;
 using Models = DatingApp.Core.Models.Image;
 using Cloudinary = CloudinaryDotNet.Actions;
 
-namespace DatingApp.Infrastructure.Mapper.Profiles
+namespace DatingApp.Infrastructure.Mappers.Profiles
 {
     public class ImageMappingProfile : Profile
     {

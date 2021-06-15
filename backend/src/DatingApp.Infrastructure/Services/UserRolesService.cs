@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DatingApp.Core.Interfaces;
 using DatingApp.Core.Interfaces.Database;
+using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Interfaces.Services;
 
-namespace DatingApp.Core.Services
+namespace DatingApp.Infrastructure.Services
 {
     public class UserRolesService : IUserRolesService
     {

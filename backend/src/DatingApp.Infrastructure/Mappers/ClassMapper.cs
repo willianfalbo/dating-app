@@ -1,8 +1,8 @@
 using System;
 using AutoMapper;
-using DatingApp.Core.Interfaces;
+using DatingApp.Core.Interfaces.Mappers;
 
-namespace DatingApp.Infrastructure.Mapper
+namespace DatingApp.Infrastructure.Mappers
 {
     /// <inheritdoc>
     public class ClassMapper : IClassMapper

@@ -2,7 +2,7 @@ using AutoMapper;
 using DatingApp.Core.Dtos.Photos;
 using DatingApp.Core.Entities;
 
-namespace DatingApp.Infrastructure.Mapper.Profiles
+namespace DatingApp.Infrastructure.Mappers.Profiles
 {
     public class PhotoMappingProfile : Profile
     {

@@ -2,11 +2,12 @@ using System;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using DatingApp.Core.Interfaces;
+using DatingApp.Core.Interfaces.Files;
+using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Models.Image;
 using Microsoft.AspNetCore.Http;
 
-namespace DatingApp.Infrastructure.Image
+namespace DatingApp.Infrastructure.Files
 {
     public class ImageUploader : IImageUploader
     {

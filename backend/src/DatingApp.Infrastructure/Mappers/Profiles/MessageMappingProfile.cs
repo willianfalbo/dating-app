@@ -3,7 +3,7 @@ using AutoMapper;
 using DatingApp.Core.Dtos.Messages;
 using DatingApp.Core.Entities;
 
-namespace DatingApp.Infrastructure.Mapper.Profiles
+namespace DatingApp.Infrastructure.Mappers.Profiles
 {
     public class MessageMappingProfile : Profile
     {

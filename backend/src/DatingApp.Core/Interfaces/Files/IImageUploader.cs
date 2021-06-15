@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DatingApp.Core.Models.Image;
 using Microsoft.AspNetCore.Http;
 
-namespace DatingApp.Core.Interfaces
+namespace DatingApp.Core.Interfaces.Files
 {
     public interface IImageUploader
     {

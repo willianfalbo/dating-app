@@ -7,7 +7,7 @@ using DatingApp.Core.Interfaces.Database;
 using DatingApp.Core.Interfaces.Services;
 using DatingApp.Core.Models;
 
-namespace DatingApp.Core.Services
+namespace DatingApp.Infrastructure.Services
 {
     public class LikesService : ILikesService
     {

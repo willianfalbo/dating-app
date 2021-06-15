@@ -2,12 +2,12 @@ using System;
 using System.Threading.Tasks;
 using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
-using DatingApp.Core.Interfaces;
 using DatingApp.Core.Interfaces.Database;
+using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Interfaces.Services;
 using DatingApp.Core.Models;
 
-namespace DatingApp.Core.Services
+namespace DatingApp.Infrastructure.Services
 {
     public class UsersService : IUsersService
     {

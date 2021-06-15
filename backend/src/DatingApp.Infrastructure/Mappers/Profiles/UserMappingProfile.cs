@@ -5,7 +5,7 @@ using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Helpers;
 
-namespace DatingApp.Infrastructure.Mapper.Profiles
+namespace DatingApp.Infrastructure.Mappers.Profiles
 {
     public class UserMapProfile : Profile
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DatingApp.Api.Helpers;
 using DatingApp.Core.Dtos.Likes;
 using DatingApp.Core.Dtos.Users;
-using DatingApp.Core.Interfaces;
+using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 

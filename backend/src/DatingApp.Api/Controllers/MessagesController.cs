@@ -6,7 +6,7 @@ using DatingApp.Api.Helpers;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using DatingApp.Core.Dtos.Messages;
-using DatingApp.Core.Interfaces;
+using DatingApp.Core.Interfaces.Mappers;
 
 namespace DatingApp.Api.Controllers
 {

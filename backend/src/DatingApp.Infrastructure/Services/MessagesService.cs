@@ -6,10 +6,10 @@ using DatingApp.Core.Interfaces.Services;
 using DatingApp.Core.Exceptions;
 using DatingApp.Core.Models;
 using DatingApp.Core.Interfaces.Database;
-using DatingApp.Core.Interfaces;
 using DatingApp.Core.Dtos.Messages;
+using DatingApp.Core.Interfaces.Mappers;
 
-namespace DatingApp.Core.Services
+namespace DatingApp.Infrastructure.Services
 {
     public class MessagesService : IMessagesService
     {

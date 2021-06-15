@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DatingApp.Api.Helpers;
 using DatingApp.Core.Dtos.Photos;
-using DatingApp.Core.Interfaces;
+using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 

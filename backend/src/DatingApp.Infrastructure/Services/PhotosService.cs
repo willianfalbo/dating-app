@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using DatingApp.Core.Dtos.Photos;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Exceptions;
-using DatingApp.Core.Interfaces;
 using DatingApp.Core.Interfaces.Database;
+using DatingApp.Core.Interfaces.Files;
+using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Interfaces.Services;
 
-namespace DatingApp.Core.Services
+namespace DatingApp.Infrastructure.Services
 {
     public class PhotosService : IPhotosService
     {
