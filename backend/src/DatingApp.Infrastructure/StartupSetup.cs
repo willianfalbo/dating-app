@@ -3,11 +3,13 @@ using System;
 using System.Text;
 using CloudinaryDotNet;
 using DatingApp.Core.Entities;
+using DatingApp.Core.Interfaces.Clients;
 using DatingApp.Core.Interfaces.Database;
 using DatingApp.Core.Interfaces.Database.Repositories;
 using DatingApp.Core.Interfaces.Files;
 using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Interfaces.Services;
+using DatingApp.Infrastructure.Clients;
 using DatingApp.Infrastructure.Database;
 using DatingApp.Infrastructure.Database.Repositories;
 using DatingApp.Infrastructure.Files;
@@ -31,7 +33,7 @@ namespace DatingApp.DI
             AddDbContext(services, configuration);
             AddAutoMapper(services);
             AddCloudinary(services, configuration);
-            AddServices(services);
+            AddDependencyInjection(services);
         }
 
         private static void AddJwtAuthentication(IServiceCollection services, IConfiguration configuration)
@@ -92,15 +94,15 @@ namespace DatingApp.DI
 
         private static void AddCloudinary(IServiceCollection services, IConfiguration configuration)
         {
-            var cloudName = configuration["CloudinarySettings:CloudName"];
+            var cloudName = configuration["Cloudinary:CloudName"];
             if (string.IsNullOrWhiteSpace(cloudName))
                 throw new ArgumentNullException(nameof(cloudName));
 
-            var apiKey = configuration["CloudinarySettings:ApiKey"];
+            var apiKey = configuration["Cloudinary:ApiKey"];
             if (string.IsNullOrWhiteSpace(apiKey))
                 throw new ArgumentNullException(nameof(apiKey));
 
-            var apiSecret = configuration["CloudinarySettings:ApiSecret"];
+            var apiSecret = configuration["Cloudinary:ApiSecret"];
             if (string.IsNullOrWhiteSpace(apiSecret))
                 throw new ArgumentNullException(nameof(apiSecret));
 
@@ -114,11 +116,13 @@ namespace DatingApp.DI
             services.AddAutoMapper(typeof(StartupSetup));
         }
 
-        private static void AddServices(IServiceCollection services)
+        private static void AddDependencyInjection(IServiceCollection services)
         {
             services.AddScoped<IClassMapper, ClassMapper>();
             services.AddScoped<IImageUploader, ImageUploader>();
+            services.AddSingleton<ISlackClient, SlackClient>();
 
+            // services
             services.AddScoped<ILikesService, LikesService>();
             services.AddScoped<IMessagesService, MessagesService>();
             services.AddScoped<IPhotosService, PhotosService>();

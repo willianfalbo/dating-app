@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using DatingApp.Core.Dtos.Photos;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Exceptions;
+using DatingApp.Core.Interfaces.Clients;
 using DatingApp.Core.Interfaces.Database;
 using DatingApp.Core.Interfaces.Files;
 using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Interfaces.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace DatingApp.Infrastructure.Services
 {
@@ -18,13 +20,24 @@ namespace DatingApp.Infrastructure.Services
         private readonly IImageUploader _imageUploader;
         private readonly IUsersService _usersService;
         private readonly IClassMapper _mapper;
+        private readonly IConfiguration _configuration;
+        private readonly ISlackClient _slackClient;
 
-        public PhotosService(IUnitOfWork unitOfWork, IUsersService usersService, IImageUploader imageUploader, IClassMapper mapper)
+        public PhotosService(
+            IUnitOfWork unitOfWork,
+            IUsersService usersService,
+            IImageUploader imageUploader,
+            IClassMapper mapper,
+            IConfiguration configuration,
+            ISlackClient slackClient
+        )
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
             _imageUploader = imageUploader ?? throw new ArgumentNullException(nameof(imageUploader));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _slackClient = slackClient ?? throw new ArgumentNullException(nameof(slackClient));
         }
 
         public Task<Photo> GetMainPhoto(int userId) =>
@@ -119,6 +132,21 @@ namespace DatingApp.Infrastructure.Services
             _unitOfWork.Photos.Remove(photo);
 
             await _unitOfWork.CommitAsync();
+
+            try
+            {
+                var result = await _slackClient.PostChatMessageAsync(
+                    _configuration["Slack:Channels:RejectedPhotos"],
+                    $"A photo with a PublicId `{photo.PublicId}` was rejected. The photo belonged to `{photo.User.UserName}`."
+                );
+
+                if (!result.Ok)
+                    throw new NotImplementedException(); // TODO: Log any app error in Sentry
+            }
+            catch
+            {
+                // we don't want to stop the operation
+            }
         }
     }
 }

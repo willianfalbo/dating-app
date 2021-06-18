@@ -2,6 +2,7 @@
 
 The backend project was initially built using .NET Core 2 and it has been updated to DotNet Core 5.0
 
+
 ### Stack
 
 -   DotNet Core 5.0 (C#)
@@ -10,6 +11,7 @@ The backend project was initially built using .NET Core 2 and it has been update
 -   SQL Server database & EF Core
 -   JWT authentication
 -   Swagger
+
 
 ### Quick Start
 
@@ -24,7 +26,7 @@ The backend project was initially built using .NET Core 2 and it has been update
     > For **uploading/downloading photos**, you must create an account in [Cloudinary](https://cloudinary.com/). Then, navigate to "Settings > Security Tab > Access Keys" menu, generate a new pair of key `ApiKey/ApiSecret`, and change your config file using the generated tokens.
 
     ```json
-    "CloudinarySettings": {
+    "Cloudinary": {
       "CloudName": "YourCloudName",
       "ApiKey": "YourApiKey",
       "ApiSecret": "YourApiSecret"
@@ -32,6 +34,7 @@ The backend project was initially built using .NET Core 2 and it has been update
     ```
 
 4. Run `npm run start` for starting the server.
+
 
 ### DB Migrations
 
@@ -41,7 +44,41 @@ This project uses Entity Framework Core for database migrations.
 
 `dotnet tool install --global dotnet-ef`
 
-**Windows WSL (Windows Subsystem For Linux)**
+
+### Slack Notifications
+
+This project sends [Slack](https://slack.com/) notifications photos are approved/rejected.
+
+To set up a new [Slack App](https://api.slack.com/apps) we need to follow the steps:
+
+1. Create a [new app](https://api.slack.com/apps?new_granular_bot_app=1) at the API website.
+
+2. Get a token to use the Web API. Navigate to **OAuth & Permissions** and scroll down to the section for scopes. Use the dropdown under the "Bot Token Scopes" header and add the scope `chat:write`.
+
+3. Install the app to your workspace. Scroll up to the top of the page and click the "Install to Workspace" button. Go ahead and click "Allow", this will generate the token.
+
+4. Copy the **Bot User OAuth Access Token** (it should begin with `xoxb`). Treat this value like a password and keep it safe.
+
+5. Create a channel to send messages. Go to the **slack workspace** linked to your **app** and **create a new channel**.
+
+6. Invite the app to the channel. Send a message like `/invite @your-app-name`. This will allow the **slack app** to send messages in the channel.
+
+7. Replace the environment variables with the configurations created above.
+
+    ```json
+    "Slack": {
+        "Token": "xoxb-YourTokenFromSlack",
+        "BaseUrl": "https://slack.com/api",
+        "Channels": {
+            "RejectedPhotos": "#rejected-photos"
+        }
+    }
+    ```
+
+Reference: https://slack.dev/node-slack-sdk/getting-started
+
+
+## Windows WSL (Windows Subsystem For Linux)
 
 If you are using WSL, you might need to follow the steps below. Otherwise, your terminal may not find the EF installation. \* NOTE: Linux users might not face this problem.
 

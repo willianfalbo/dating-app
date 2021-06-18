@@ -18,6 +18,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
         public Task<Photo> GetPhoto(int photoId) =>
             _context.Photos
                 .IgnoreQueryFilters()
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(p => p.Id == photoId);
 
         public async Task<IEnumerable<object>> GetPhotosForModeration()
