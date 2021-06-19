@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DatingApp.Core.Constants;
 using DatingApp.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
@@ -17,45 +18,51 @@ namespace DatingApp.Infrastructure.Database.Seeds
         {
             if (!userManager.Users.Any())
             {
-                // create app roles
-                var roles = new List<Role>
+                CreateAppRoles(roleManager);
+                CreateAdminUser(userManager);
+                CreateUsers(userManager);
+            }
+        }
+
+        private static void CreateAppRoles(RoleManager<Role> roleManager)
+        {
+            var roles = new List<Role>
                 {
-                    new Role { Name = "Member" },
-                    new Role { Name = "Admin" },
-                    new Role { Name = "Moderator" },
-                    new Role { Name = "VIP" },
+                    new Role { Name = Roles.Member },
+                    new Role { Name = Roles.Admin },
+                    new Role { Name = Roles.Moderator },
                 };
 
-                foreach (var role in roles)
-                {
-                    roleManager.CreateAsync(role).Wait();
-                }
+            foreach (var role in roles)
+            {
+                roleManager.CreateAsync(role).Wait();
+            }
+        }
 
-                // create admin user
-                var adminUser = new User
-                {
-                    UserName = "Admin"
-                };
+        private static void CreateAdminUser(UserManager<User> userManager)
+        {
+            var adminUser = new User { UserName = "Admin" };
 
-                var result = userManager.CreateAsync(adminUser, "password").Result;
+            var result = userManager.CreateAsync(adminUser, "password").Result;
 
-                if (result.Succeeded)
-                {
-                    var admin = userManager.FindByNameAsync("Admin").Result;
-                    userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" }).Wait();
-                }
+            if (result.Succeeded)
+            {
+                var admin = userManager.FindByNameAsync("Admin").Result;
+                userManager.AddToRolesAsync(admin, new[] { Roles.Admin, Roles.Moderator }).Wait();
+            }
+        }
 
-                // create some users
-                string userSeedPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "DatingApp.Infrastructure", "Database", "Seeds", "UserSeedData.json");
-                var userData = File.ReadAllText(userSeedPath);
-                var users = JsonConvert.DeserializeObject<List<User>>(userData);
+        private static void CreateUsers(UserManager<User> userManager)
+        {
+            string userSeedPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "DatingApp.Infrastructure", "Database", "Seeds", "UserSeedData.json");
+            var userData = File.ReadAllText(userSeedPath);
+            var users = JsonConvert.DeserializeObject<List<User>>(userData);
 
-                foreach (var user in users)
-                {
-                    user.Photos.SingleOrDefault().IsApproved = true;
-                    userManager.CreateAsync(user, "password").Wait();
-                    userManager.AddToRoleAsync(user, "Member").Wait();
-                }
+            foreach (var user in users)
+            {
+                user.Photos.SingleOrDefault().IsApproved = true;
+                userManager.CreateAsync(user, "password").Wait();
+                userManager.AddToRoleAsync(user, Roles.Member).Wait();
             }
         }
 

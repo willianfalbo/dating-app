@@ -1,5 +1,6 @@
 using DatingApp.Api.Helpers;
 using DatingApp.Api.Middlewares;
+using DatingApp.Core.Constants;
 using DatingApp.DI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -76,9 +77,8 @@ namespace DatingApp.Api
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
-                options.AddPolicy("VipOnly", policy => policy.RequireRole("VIP"));
+                options.AddPolicy(AuthorizationRoles.Admin, policy => policy.RequireRole(Roles.Admin));
+                options.AddPolicy(AuthorizationRoles.Moderator, policy => policy.RequireRole(Roles.Admin, Roles.Moderator));
             });
         }
 

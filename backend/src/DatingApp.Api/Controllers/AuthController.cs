@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using DatingApp.Api.Helpers;
+using DatingApp.Core.Constants;
 using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Interfaces.Mappers;
@@ -53,7 +54,10 @@ namespace DatingApp.Api.Controllers
             var userToReturn = _mapper.To<UserForDetailedDto>(user);
 
             if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, Roles.Member);
                 return Ok(userToReturn);
+            }
 
             return BadRequest(result.Errors);
         }

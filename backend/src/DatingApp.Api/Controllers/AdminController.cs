@@ -8,6 +8,7 @@ using DatingApp.Core.Interfaces.Services;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Dtos;
 using DatingApp.Api.Helpers;
+using DatingApp.Core.Constants;
 
 namespace DatingApp.Api.Controllers
 {
@@ -26,7 +27,7 @@ namespace DatingApp.Api.Controllers
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
-        [Authorize(Policy = "RequireAdminRole")]
+        [Authorize(Policy = AuthorizationRoles.Admin)]
         [HttpGet("users-with-roles")]
         public async Task<IActionResult> GetUsersWithRoles()
         {
@@ -34,7 +35,7 @@ namespace DatingApp.Api.Controllers
             return Ok(users);
         }
 
-        [Authorize(Policy = "RequireAdminRole")]
+        [Authorize(Policy = AuthorizationRoles.Admin)]
         [HttpPost("edit-roles/{userName}")]
         public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
         {
@@ -58,7 +59,7 @@ namespace DatingApp.Api.Controllers
             return Ok(await _userManager.GetRolesAsync(user));
         }
 
-        [Authorize(Policy = "ModeratePhotoRole")]
+        [Authorize(Policy = AuthorizationRoles.Moderator)]
         [HttpGet("photos-for-moderation")]
         public async Task<IActionResult> GetPhotosForModeration()
         {
@@ -66,7 +67,7 @@ namespace DatingApp.Api.Controllers
             return Ok(photos);
         }
 
-        [Authorize(Policy = "ModeratePhotoRole")]
+        [Authorize(Policy = AuthorizationRoles.Moderator)]
         [HttpPost("approve-photo/{photoId}")]
         public async Task<IActionResult> ApprovePhoto(int photoId)
         {
@@ -74,7 +75,7 @@ namespace DatingApp.Api.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = "ModeratePhotoRole")]
+        [Authorize(Policy = AuthorizationRoles.Moderator)]
         [HttpPost("reject-photo/{photoId}")]
         public async Task<IActionResult> RejectPhoto(int photoId)
         {
