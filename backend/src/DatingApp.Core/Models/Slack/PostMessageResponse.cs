@@ -15,34 +15,13 @@ namespace DatingApp.Core.Models.Slack
 
         [JsonPropertyName("message")]
         public Message Message;
-    }
 
-    public class BotProfile
-    {
-        [JsonPropertyName("id")]
-        public string Id;
-
-        [JsonPropertyName("deleted")]
-        public bool Deleted;
-
-        [JsonPropertyName("name")]
-        public string Name;
-
-        [JsonPropertyName("updated")]
-        public int Updated;
-
-        [JsonPropertyName("app_id")]
-        public string AppId;
-
-        [JsonPropertyName("team_id")]
-        public string TeamId;
+        [JsonPropertyName("error")]
+        public string Error;
     }
 
     public class Message
     {
-        [JsonPropertyName("bot_id")]
-        public string BotId;
-
         [JsonPropertyName("type")]
         public string Type;
 
@@ -57,8 +36,5 @@ namespace DatingApp.Core.Models.Slack
 
         [JsonPropertyName("team")]
         public string Team;
-
-        [JsonPropertyName("bot_profile")]
-        public BotProfile BotProfile;
     }
 }

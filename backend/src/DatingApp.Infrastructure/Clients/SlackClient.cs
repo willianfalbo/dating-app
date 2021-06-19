@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DatingApp.Infrastructure.Clients
 {
-    public class SlackClient : HttpClientBase, ISlackClient
+    public class SlackClient : HttpClientBase, ISlackService
     {
         private readonly IConfiguration _configuration;
 
@@ -25,21 +25,37 @@ namespace DatingApp.Infrastructure.Clients
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public async Task<PostMessageResponse> PostChatMessageAsync(string channelName, string message)
+        /// <inheritdoc />
+        public async Task<PostMessageResponse> PostChatMessageAsync(string channelName, string message, bool ignoreErrors = false)
         {
-            if (string.IsNullOrWhiteSpace(channelName))
-                throw new ArgumentNullException(nameof(channelName));
-
-            if (string.IsNullOrWhiteSpace(message))
-                throw new ArgumentNullException(nameof(message));
-
-            var response = await base.PostAsync<PostMessageResponse>("/chat.postMessage", new
+            try
             {
-                channel = channelName,
-                text = message
-            });
+                if (string.IsNullOrWhiteSpace(channelName))
+                    throw new ArgumentNullException(nameof(channelName));
 
-            return response.Data;
+                if (string.IsNullOrWhiteSpace(message))
+                    throw new ArgumentNullException(nameof(message));
+
+                var response = await PostAsync<PostMessageResponse>("/chat.postMessage", new
+                {
+                    channel = channelName,
+                    text = message
+                });
+
+                if (!response.IsSuccessful || !response.Data.Ok)
+                    throw new Exception($"Error when posting slack message. Details: {response.Data.Error}");
+
+                return response.Data;
+            }
+            catch (Exception ex)
+            {
+                // TODO: Log errors manually. E.g. https://serilog.net/
+
+                if (ignoreErrors)
+                    return new PostMessageResponse() { Ok = false, Error = ex.Message };
+
+                throw ex;
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
         public async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> filter) =>
             await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         // implementation based on https://stackoverflow.com/a/63764885/11644167.
         public async Task<PagedResult<TEntity>> PagedFilterAsync(
             Expression<Func<TEntity, bool>> filter,

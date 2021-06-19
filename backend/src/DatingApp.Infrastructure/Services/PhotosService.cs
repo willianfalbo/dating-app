@@ -21,7 +21,7 @@ namespace DatingApp.Infrastructure.Services
         private readonly IUsersService _usersService;
         private readonly IClassMapper _mapper;
         private readonly IConfiguration _configuration;
-        private readonly ISlackClient _slackClient;
+        private readonly ISlackService _slackService;
 
         public PhotosService(
             IUnitOfWork unitOfWork,
@@ -29,7 +29,7 @@ namespace DatingApp.Infrastructure.Services
             IImageUploader imageUploader,
             IClassMapper mapper,
             IConfiguration configuration,
-            ISlackClient slackClient
+            ISlackService slackService
         )
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -37,7 +37,7 @@ namespace DatingApp.Infrastructure.Services
             _imageUploader = imageUploader ?? throw new ArgumentNullException(nameof(imageUploader));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _slackClient = slackClient ?? throw new ArgumentNullException(nameof(slackClient));
+            _slackService = slackService ?? throw new ArgumentNullException(nameof(slackService));
         }
 
         public Task<Photo> GetMainPhoto(int userId) =>
@@ -133,20 +133,11 @@ namespace DatingApp.Infrastructure.Services
 
             await _unitOfWork.CommitAsync();
 
-            try
-            {
-                var result = await _slackClient.PostChatMessageAsync(
-                    _configuration["Slack:Channels:RejectedPhotos"],
-                    $"A photo with a PublicId `{photo.PublicId}` was rejected. The photo belonged to `{photo.User.UserName}`."
-                );
-
-                if (!result.Ok)
-                    throw new NotImplementedException(); // TODO: Log any app error in Sentry
-            }
-            catch
-            {
-                // we don't want to stop the operation
-            }
+            await _slackService.PostChatMessageAsync(
+                channelName: _configuration["Slack:Channels:RejectedPhotos"],
+                message: $"A photo for the user `{photo.User.UserName}` was rejected. The PublicID is `{photo.PublicId}`.",
+                ignoreErrors: true
+            );
         }
     }
 }

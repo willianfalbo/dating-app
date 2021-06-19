@@ -120,7 +120,7 @@ namespace DatingApp.DI
         {
             services.AddScoped<IClassMapper, ClassMapper>();
             services.AddScoped<IImageUploader, ImageUploader>();
-            services.AddSingleton<ISlackClient, SlackClient>();
+            services.AddSingleton<ISlackService, SlackClient>();
 
             // services
             services.AddScoped<ILikesService, LikesService>();

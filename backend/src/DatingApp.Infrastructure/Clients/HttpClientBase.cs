@@ -37,7 +37,6 @@ namespace DatingApp.Infrastructure.Clients
                 defaultHeaders.Add("Content", "application/json");
             }
 
-            _httpClient.Headers.Clear();
             foreach (var (key, value) in defaultHeaders)
                 _httpClient.Headers.AddOrReplace(key, value);
 
@@ -49,9 +48,9 @@ namespace DatingApp.Infrastructure.Clients
             var response = await _httpClient.Request(endpoint).GetAsync();
 
             if (_ensureSuccess && !response.ResponseMessage.IsSuccessStatusCode)
-                throw new Exception(this.GetDefaultErrorMessage(endpoint));
+                throw new Exception(GetDefaultErrorMessage(endpoint));
 
-            return await this.GetHttpClientResponse<TEntity>(response);
+            return await FormatResponse<TEntity>(response);
         }
 
         public async Task<HttpClientResponse<TEntity>> PostAsync<TEntity>(string endpoint, object body)
@@ -60,9 +59,9 @@ namespace DatingApp.Infrastructure.Clients
             var response = await _httpClient.Request(endpoint).PostAsync(content);
 
             if (_ensureSuccess && !response.ResponseMessage.IsSuccessStatusCode)
-                throw new Exception(this.GetDefaultErrorMessage(endpoint));
+                throw new Exception(GetDefaultErrorMessage(endpoint));
 
-            return await this.GetHttpClientResponse<TEntity>(response);
+            return await FormatResponse<TEntity>(response);
         }
 
         public async Task<HttpClientResponse<TEntity>> PutAsync<TEntity>(string endpoint, object body)
@@ -71,9 +70,9 @@ namespace DatingApp.Infrastructure.Clients
             var response = await _httpClient.Request(endpoint).PutAsync(content);
 
             if (_ensureSuccess && !response.ResponseMessage.IsSuccessStatusCode)
-                throw new Exception(this.GetDefaultErrorMessage(endpoint));
+                throw new Exception(GetDefaultErrorMessage(endpoint));
 
-            return await this.GetHttpClientResponse<TEntity>(response);
+            return await FormatResponse<TEntity>(response);
         }
 
         public async Task<HttpClientResponse<TEntity>> PatchAsync<TEntity>(string endpoint, object body)
@@ -82,12 +81,12 @@ namespace DatingApp.Infrastructure.Clients
             var response = await _httpClient.Request(endpoint).PatchAsync(content);
 
             if (_ensureSuccess && !response.ResponseMessage.IsSuccessStatusCode)
-                throw new Exception(this.GetDefaultErrorMessage(endpoint));
+                throw new Exception(GetDefaultErrorMessage(endpoint));
 
-            return await this.GetHttpClientResponse<TEntity>(response);
+            return await FormatResponse<TEntity>(response);
         }
 
-        private async Task<HttpClientResponse<TEntity>> GetHttpClientResponse<TEntity>(IFlurlResponse response)
+        private async Task<HttpClientResponse<TEntity>> FormatResponse<TEntity>(IFlurlResponse response)
         {
             return new HttpClientResponse<TEntity>
             {

@@ -4,7 +4,7 @@ using DatingApp.Core.Interfaces.Mappers;
 
 namespace DatingApp.Infrastructure.Mappers
 {
-    /// <inheritdoc>
+    /// <inheritdoc />
     public class ClassMapper : IClassMapper
     {
         private readonly IMapper _mapper;
