@@ -9,8 +9,8 @@ namespace DatingApp.Core.Interfaces.Services
     public interface IMessagesService
     {
         Task<Message> GetMessage(int id);
-        Task<PagedResult<Message>> GetMessages(int userId, MessageForFilterDto filter);
-        Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId);
+        Task<Paginated<Message>> GetMessages(int userId, MessageForFilterDto filter);
+        Task<Paginated<Message>> GetMessagesThread(int userId, int recipientId);
         Task<IEnumerable<Message>> GetSenderMessagesThread(int userId, int recipientId);
         Task<Message> SaveMessage(int userId, MessageForCreationDto messageDto);
         Task DeleteMessage(int messageId, int userId);

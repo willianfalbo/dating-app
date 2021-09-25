@@ -34,7 +34,7 @@ namespace DatingApp.Infrastructure.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public Task<PagedResult<User>> GetLikes(int userId, LikeForFilterDto filter) =>
+        public Task<Paginated<User>> GetLikes(int userId, LikeForFilterDto filter) =>
             _unitOfWork.Users.GetUserLikes(userId, filter);
     }
 }

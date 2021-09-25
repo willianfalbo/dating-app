@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DatingApp.Core.Models.Slack;
 
-namespace DatingApp.Core.Interfaces.Clients
+namespace DatingApp.Core.Interfaces.Services
 {
     public interface ISlackService
     {

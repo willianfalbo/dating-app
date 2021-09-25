@@ -34,14 +34,12 @@ namespace DatingApp.Infrastructure.Database.Repositories
             return user;
         }
 
-        public async Task<PagedResult<User>> GetUsers(int userId, UserForFilterDto filter)
+        public async Task<Paginated<User>> GetUsers(UserForFilterDto filter)
         {
             var query = _context.Users
                 .Include(p => p.Photos)
                 .OrderByDescending(u => u.LastActive)
                 .AsQueryable();
-
-            query = query.Where(u => u.Id != userId);
 
             if (!string.IsNullOrWhiteSpace(filter.Gender))
                 query = query.Where(u => u.Gender == filter.Gender);
@@ -67,10 +65,10 @@ namespace DatingApp.Infrastructure.Database.Repositories
                 }
             }
 
-            return await this.PagedFilterAsync(query, filter.PageNumber, filter.PageSize);
+            return await this.PaginatedFilterAsync(query, filter.Page, filter.Limit);
         }
 
-        public async Task<PagedResult<User>> GetUserLikes(int userId, LikeForFilterDto filter)
+        public async Task<Paginated<User>> GetUserLikes(int userId, LikeForFilterDto filter)
         {
             var query = _context.Users
                 .Include(p => p.Photos)
@@ -82,7 +80,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
             var likeIds = await GetIdsUserLikes(userId, filter.FilterSender);
             query = query.Where(u => likeIds.Contains(u.Id));
 
-            return await this.PagedFilterAsync(query, filter.PageNumber, filter.PageSize);
+            return await this.PaginatedFilterAsync(query, filter.Page, filter.Limit);
         }
 
         private async Task<IEnumerable<int>> GetIdsUserLikes(int userId, bool filterSender = true)

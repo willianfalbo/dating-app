@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.Api.Helpers;
@@ -7,6 +6,7 @@ using DatingApp.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using DatingApp.Core.Dtos.Messages;
 using DatingApp.Core.Interfaces.Mappers;
+using DatingApp.Core.Models;
 
 namespace DatingApp.Api.Controllers
 {
@@ -47,14 +47,7 @@ namespace DatingApp.Api.Controllers
         {
             var messages = await _service.GetMessages(base.GetUserIdFromToken(), filterDto);
 
-            Response.AddPagination(
-                messages.CurrentPage,
-                messages.PageSize,
-                messages.TotalCount,
-                messages.TotalPages
-            );
-
-            return Ok(_mapper.To<IEnumerable<MessageToReturnDto>>(messages));
+            return Ok(_mapper.To<Paginated<MessageToReturnDto>>(messages));
         }
 
         // api/messages/thread/{recipientId}
@@ -62,7 +55,7 @@ namespace DatingApp.Api.Controllers
         public async Task<IActionResult> GetMessagesThread(int recipientId)
         {
             var messages = await _service.GetMessagesThread(base.GetUserIdFromToken(), recipientId);
-            return Ok(_mapper.To<IEnumerable<MessageToReturnDto>>(messages));
+            return Ok(_mapper.To<Paginated<MessageToReturnDto>>(messages));
         }
 
         // api/messages

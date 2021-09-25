@@ -3,7 +3,6 @@ using System;
 using System.Text;
 using CloudinaryDotNet;
 using DatingApp.Core.Entities;
-using DatingApp.Core.Interfaces.Clients;
 using DatingApp.Core.Interfaces.Database;
 using DatingApp.Core.Interfaces.Database.Repositories;
 using DatingApp.Core.Interfaces.Files;
@@ -128,6 +127,7 @@ namespace DatingApp.DI
             services.AddScoped<IPhotosService, PhotosService>();
             services.AddScoped<IUserRolesService, UserRolesService>();
             services.AddScoped<IUsersService, UsersService>();
+            services.AddSingleton<ICacheService, RedisCacheService>();
         }
     }
 }

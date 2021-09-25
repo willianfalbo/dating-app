@@ -2,13 +2,13 @@ namespace DatingApp.Core.Dtos.Users
 {
     public class UserForFilterDto
     {
-        private const int PageSizeLimit = 50;
-        public int PageNumber { get; set; } = 1;
-        private int _pageSize = 10;
-        public int PageSize
+        private const int _maxLimit = 50;
+        public int Page { get; set; } = 1;
+        private int _limit = 10;
+        public int Limit
         {
-            get { return _pageSize; }
-            set { _pageSize = (value > PageSizeLimit) ? PageSizeLimit : value; }
+            get { return _limit; }
+            set { _limit = (value > _maxLimit) ? _maxLimit : value; }
         }
 
         private string _gender;

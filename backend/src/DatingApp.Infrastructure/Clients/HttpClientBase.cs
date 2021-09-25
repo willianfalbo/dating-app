@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DatingApp.Core.Interfaces.Clients;
 using DatingApp.Core.Models.HttpClient;
 using Flurl.Http;
 using Newtonsoft.Json;

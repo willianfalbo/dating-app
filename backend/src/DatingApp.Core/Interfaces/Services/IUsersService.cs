@@ -9,7 +9,7 @@ namespace DatingApp.Core.Interfaces.Services
     {
         Task<User> GetUserByUsername(string username);
         Task<User> GetUser(int id, bool isCurrentUser);
-        Task<PagedResult<User>> GetUsers(int userId, UserForFilterDto filter);
+        Task<Paginated<User>> GetUsers(UserForFilterDto filter);
         Task<User> UpdateUser(int id, UserForUpdateDto userDto);
         Task UpdateUserActivity(int id);
     }

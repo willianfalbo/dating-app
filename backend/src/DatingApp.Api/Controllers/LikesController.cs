@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using DatingApp.Api.Helpers;
 using DatingApp.Core.Dtos.Likes;
 using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Interfaces.Mappers;
 using DatingApp.Core.Interfaces.Services;
+using DatingApp.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.Api.Controllers
@@ -30,9 +30,7 @@ namespace DatingApp.Api.Controllers
         {
             var users = await _service.GetLikes(base.GetUserIdFromToken(), filterDto);
 
-            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
-
-            return Ok(_mapper.To<IEnumerable<UserForListDto>>(users));
+            return Ok(_mapper.To<Paginated<UserForListDto>>(users));
         }
 
         // api/likes

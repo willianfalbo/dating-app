@@ -19,7 +19,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-        public async Task<PagedResult<Message>> GetMessages(int userId, MessageForFilterDto filter)
+        public async Task<Paginated<Message>> GetMessages(int userId, MessageForFilterDto filter)
         {
             var query = _context.Messages
                 .Include(u => u.Sender).ThenInclude(p => p.Photos)
@@ -44,11 +44,11 @@ namespace DatingApp.Infrastructure.Database.Repositories
 
             query = query.OrderByDescending(d => d.MessageSent);
 
-            return await this.PagedFilterAsync(query, filter.PageNumber, filter.PageSize);
+            return await this.PaginatedFilterAsync(query, filter.Page, filter.Limit);
         }
 
-        public async Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId) =>
-            await this.PagedFilterAsync(
+        public async Task<Paginated<Message>> GetMessagesThread(int userId, int recipientId) =>
+            await this.PaginatedFilterAsync(
                 filter: m =>
                     m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false ||
                     m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false,
@@ -58,7 +58,7 @@ namespace DatingApp.Infrastructure.Database.Repositories
                 ordination: m =>
                     m.OrderBy(p => p.MessageSent),
                 page: 1,
-                pageSize: 100 // TODO: Add load more pagination in frontend
+                limit: 100 // TODO: Add load more pagination in frontend
             );
 
         public async Task<IEnumerable<Message>> GetSenderMessagesThread(int userId, int recipientId) =>

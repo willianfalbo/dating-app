@@ -15,12 +15,14 @@ namespace DatingApp.Api.Controllers
         private readonly IPhotosService _service;
         private readonly IUsersService _usersService;
         private readonly IClassMapper _mapper;
+        private readonly ICacheService _cache;
 
-        public PhotosController(IPhotosService service, IUsersService usersService, IClassMapper mapper)
+        public PhotosController(IPhotosService service, IUsersService usersService, IClassMapper mapper, ICacheService cache)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         }
 
         // api/photos/{photoId}
@@ -47,6 +49,10 @@ namespace DatingApp.Api.Controllers
         public async Task<IActionResult> SetMainPhoto(int photoId)
         {
             await _service.SetMainPhoto(base.GetUserIdFromToken(), photoId);
+
+            // remove from the cache by prefix
+            await _cache.RemoveByPrefixAsync("users:search");
+
             return NoContent();
         }
 

@@ -28,13 +28,15 @@ namespace DatingApp.Api.Controllers
         private readonly IUsersService _usersService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ICacheService _cache;
 
         public AuthController(
             IConfiguration config,
             IClassMapper mapper,
             IUsersService usersService,
             UserManager<User> userManager,
-            SignInManager<User> signInManager
+            SignInManager<User> signInManager,
+            ICacheService cache
         )
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
@@ -42,6 +44,7 @@ namespace DatingApp.Api.Controllers
             _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         }
 
         // api/auth/register
@@ -56,6 +59,10 @@ namespace DatingApp.Api.Controllers
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, Roles.Member);
+
+                // remove from the cache by prefix
+                await _cache.RemoveByPrefixAsync("users:search");
+
                 return Ok(userToReturn);
             }
 

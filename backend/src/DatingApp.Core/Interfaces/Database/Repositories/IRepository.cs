@@ -27,18 +27,18 @@ namespace DatingApp.Core.Interfaces.Database.Repositories
         /// </summary>
         /// <param name="filter">Filters and conditions to apply.</param>
         /// <param name="page">Current page number.</param>
-        /// <param name="pageSize">Pagination size to return.</param>
+        /// <param name="limit">Pagination size/limit to return.</param>
         /// <param name="include">Related objects to include and return.</param>
         /// <param name="ordination">Entities to order by.</param>
         /// <returns>Paginated entities.</returns>
-        Task<PagedResult<TEntity>> PagedFilterAsync(
+        Task<Paginated<TEntity>> PaginatedFilterAsync(
             Expression<Func<TEntity, bool>> filter,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> ordination = null,
             int page = 1,
-            int pageSize = 10
+            int limit = 10
         );
 
-        Task<PagedResult<TEntity>> PagedFilterAsync(IQueryable<TEntity> query, int page = 1, int pageSize = 10);
+        Task<Paginated<TEntity>> PaginatedFilterAsync(IQueryable<TEntity> query, int page = 1, int limit = 10);
     }
 }

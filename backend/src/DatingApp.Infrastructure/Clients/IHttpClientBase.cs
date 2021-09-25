@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DatingApp.Core.Models.HttpClient;
 
-namespace DatingApp.Core.Interfaces.Clients
+namespace DatingApp.Infrastructure.Clients
 {
     public interface IHttpClientBase : IDisposable
     {

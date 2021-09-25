@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DatingApp.Core.Interfaces.Clients;
+using DatingApp.Core.Interfaces.Services;
 using DatingApp.Core.Models.Slack;
 using Microsoft.Extensions.Configuration;
 

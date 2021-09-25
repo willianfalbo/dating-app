@@ -8,6 +8,6 @@ namespace DatingApp.Core.Interfaces.Services
     public interface ILikesService
     {
         Task AddLike(int userId, int recipientId);
-        Task<PagedResult<User>> GetLikes(int userId, LikeForFilterDto filter);
+        Task<Paginated<User>> GetLikes(int userId, LikeForFilterDto filter);
     }
 }

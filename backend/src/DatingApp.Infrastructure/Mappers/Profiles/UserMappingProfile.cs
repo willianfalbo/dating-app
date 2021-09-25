@@ -4,6 +4,7 @@ using AutoMapper;
 using DatingApp.Core.Dtos.Users;
 using DatingApp.Core.Entities;
 using DatingApp.Core.Helpers;
+using DatingApp.Core.Models;
 
 namespace DatingApp.Infrastructure.Mappers.Profiles
 {
@@ -36,6 +37,9 @@ namespace DatingApp.Infrastructure.Mappers.Profiles
             CreateMap<UserForRegisterDto, User>()
                 .ForMember(dest => dest.Created, opt => { opt.MapFrom(src => DateTimeOffset.Now); })
                 .ForMember(dest => dest.LastActive, opt => { opt.MapFrom(src => DateTimeOffset.Now); });
+
+            CreateMap<Paginated<UserForListDto>, Paginated<User>>()
+                .ReverseMap();
         }
     }
 }

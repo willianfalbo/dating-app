@@ -39,12 +39,12 @@ namespace DatingApp.Infrastructure.Database.Repositories
 
         /// <inheritdoc />
         // implementation based on https://stackoverflow.com/a/63764885/11644167.
-        public async Task<PagedResult<TEntity>> PagedFilterAsync(
+        public async Task<Paginated<TEntity>> PaginatedFilterAsync(
             Expression<Func<TEntity, bool>> filter,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> ordination = null,
             int page = 1,
-            int pageSize = 10
+            int limit = 10
         )
         {
             var query = _context.Set<TEntity>().AsQueryable();
@@ -59,17 +59,17 @@ namespace DatingApp.Infrastructure.Database.Repositories
                 query = query.Where(filter);
 
             var count = await query.CountAsync();
-            var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = await query.Skip((page - 1) * limit).Take(limit).ToListAsync();
 
-            return new PagedResult<TEntity>(items, count, page, pageSize);
+            return new Paginated<TEntity>(items, count, page, limit);
         }
 
-        public async Task<PagedResult<TEntity>> PagedFilterAsync(IQueryable<TEntity> query, int page = 1, int pageSize = 10)
+        public async Task<Paginated<TEntity>> PaginatedFilterAsync(IQueryable<TEntity> query, int page = 1, int limit = 10)
         {
             var count = await query.CountAsync();
-            var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = await query.Skip((page - 1) * limit).Take(limit).ToListAsync();
 
-            return new PagedResult<TEntity>(items, count, page, pageSize);
+            return new Paginated<TEntity>(items, count, page, limit);
         }
     }
 }

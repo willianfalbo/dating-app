@@ -10,7 +10,7 @@ namespace DatingApp.Core.Interfaces.Database.Repositories
     {
         Task<User> GetUserByUsername(string username);
         Task<User> GetUser(int id, bool isCurrentUser);
-        Task<PagedResult<User>> GetUserLikes(int userId, LikeForFilterDto filter);
-        Task<PagedResult<User>> GetUsers(int userId, UserForFilterDto filter);
+        Task<Paginated<User>> GetUserLikes(int userId, LikeForFilterDto filter);
+        Task<Paginated<User>> GetUsers(UserForFilterDto filter);
     }
 }

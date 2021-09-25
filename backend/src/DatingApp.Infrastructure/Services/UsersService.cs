@@ -26,8 +26,8 @@ namespace DatingApp.Infrastructure.Services
         public Task<User> GetUserByUsername(string username) =>
              _unitOfWork.Users.GetUserByUsername(username);
 
-        public Task<PagedResult<User>> GetUsers(int userId, UserForFilterDto filter) =>
-            _unitOfWork.Users.GetUsers(userId, filter);
+        public Task<Paginated<User>> GetUsers(UserForFilterDto filter) =>
+            _unitOfWork.Users.GetUsers(filter);
 
         public async Task<User> UpdateUser(int id, UserForUpdateDto userDto)
         {

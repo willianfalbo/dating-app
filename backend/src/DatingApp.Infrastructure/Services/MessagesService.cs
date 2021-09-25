@@ -27,10 +27,10 @@ namespace DatingApp.Infrastructure.Services
         public Task<Message> GetMessage(int id) =>
             _unitOfWork.Messages.GetMessage(id);
 
-        public Task<PagedResult<Message>> GetMessages(int userId, MessageForFilterDto filter) =>
+        public Task<Paginated<Message>> GetMessages(int userId, MessageForFilterDto filter) =>
              _unitOfWork.Messages.GetMessages(userId, filter);
 
-        public Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId) =>
+        public Task<Paginated<Message>> GetMessagesThread(int userId, int recipientId) =>
             _unitOfWork.Messages.GetMessagesThread(userId, recipientId);
 
         public Task<IEnumerable<Message>> GetSenderMessagesThread(int userId, int recipientId) =>
