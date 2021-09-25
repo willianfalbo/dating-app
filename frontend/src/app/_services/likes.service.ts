@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { DATINGAPP_API_URL } from '../app.config';
 import { User } from '../_models/user';
-import { PaginatedResult } from '../_models/pagination';
+import { Paginated } from '../_models/pagination';
 
 import { Helper } from './helper';
 
@@ -17,32 +17,31 @@ export class LikesService {
 
   constructor(private http: HttpClient) { }
 
-  getLikes(pageNumber?: number, pageSize?: number, filterSender?: boolean): Observable<PaginatedResult<User[]>> {
-    const paginatedResult = new PaginatedResult<User[]>();
-
+  getLikes(page?: number, limit?: number, filterSender?: boolean): Observable<Paginated<User>> {
     let params = new HttpParams();
 
-    if (pageNumber) {
-      params = params.append('pageNumber', pageNumber.toString());
+    if (page) {
+      params = params.append('page', page.toString());
     }
-    if (pageSize) {
-      params = params.append('pageSize', pageSize.toString());
+    if (limit) {
+      params = params.append('limit', limit.toString());
     }
 
     params = params.append('filterSender', filterSender.toString());
 
-    return this.http.get<User[]>(`${DATINGAPP_API_URL}/likes`, { observe: 'response', params })
+    return this.http.get<Paginated<User>>(`${DATINGAPP_API_URL}/likes`, { params })
       .pipe(
         map(response => {
-          paginatedResult.result = response.body;
-          if (response.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
-          }
           // set default photo in case of null
-          paginatedResult.result.forEach(u => {
-            u = Helper.checkUserPhoto(u);
-          });
-          return paginatedResult;
+          return {
+            ...response,
+            items: response.items.map(u => {
+              return {
+                ...u,
+                photoUrl: Helper.checkEmptyUserPhoto(u.photoUrl, u.gender),
+              };
+            }),
+          };
         })
       );
   }

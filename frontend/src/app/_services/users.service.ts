@@ -6,7 +6,7 @@ import { tap, map } from 'rxjs/operators';
 
 import { DATINGAPP_API_URL } from '../app.config';
 import { User } from '../_models/user';
-import { PaginatedResult } from '../_models/pagination';
+import { Paginated } from '../_models/pagination';
 
 import { Helper } from './helper';
 
@@ -17,16 +17,14 @@ export class UsersService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(pageNumber?: number, pageSize?: number, userParams?: any): Observable<PaginatedResult<User[]>> {
-    const paginatedResult = new PaginatedResult<User[]>();
-
+  getUsers(page?: number, limit?: number, userParams?: any): Observable<Paginated<User>> {
     let params = new HttpParams();
 
-    if (pageNumber) {
-      params = params.append('pageNumber', pageNumber.toString());
+    if (page) {
+      params = params.append('page', page.toString());
     }
-    if (pageSize) {
-      params = params.append('pageSize', pageSize.toString());
+    if (limit) {
+      params = params.append('limit', limit.toString());
     }
     if (userParams) {
       params = params.append('minAge', userParams.minAge);
@@ -35,18 +33,19 @@ export class UsersService {
       params = params.append('orderBy', userParams.orderBy);
     }
 
-    return this.http.get<User[]>(`${DATINGAPP_API_URL}/users`, { observe: 'response', params })
+    return this.http.get<Paginated<User>>(`${DATINGAPP_API_URL}/users`, { params })
       .pipe(
         map(response => {
-          paginatedResult.result = response.body;
-          if (response.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
-          }
-          // set default photo in case of null
-          paginatedResult.result.forEach(u => {
-            u = Helper.checkUserPhoto(u);
-          });
-          return paginatedResult;
+          return {
+            ...response,
+            // set default photo in case of null
+            items: response.items.map(u => {
+              return {
+                ...u,
+                photoUrl: Helper.checkEmptyUserPhoto(u.photoUrl, u.gender),
+              }
+            })
+          };
         })
       );
   }
@@ -54,8 +53,11 @@ export class UsersService {
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${DATINGAPP_API_URL}/users/${id}`)
       .pipe(
-        tap(u => {
-          u = Helper.checkUserPhoto(u); // set default photo in case of null
+        map(user => {
+          return {
+            ...user,
+            photoUrl: Helper.checkEmptyUserPhoto(user.photoUrl, user.gender),
+          };
         })
       );
   }

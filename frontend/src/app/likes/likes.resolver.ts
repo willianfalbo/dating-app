@@ -5,12 +5,13 @@ import { AlertifyService } from '../_services/alertify.service';
 import { LikesService } from '../_services/likes.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Paginated } from '../_models/pagination';
 
 @Injectable()
-export class LikesResolver implements Resolve<User[]> {
+export class LikesResolver implements Resolve<Paginated<User>> {
 
-  pageNumber = 1;
-  pageSize = 5;
+  page = 1;
+  limit = 5;
   likerKind = 'sender';
 
   constructor(
@@ -19,8 +20,8 @@ export class LikesResolver implements Resolve<User[]> {
     private alertify: AlertifyService
   ) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User[]> {
-    return this.likesService.getLikes(this.pageNumber, this.pageSize, this.likerKind === 'sender')
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Paginated<User>> {
+    return this.likesService.getLikes(this.page, this.limit, this.likerKind === 'sender')
       .pipe(
         catchError(error => {
           this.alertify.error('Problem retrieving data.');

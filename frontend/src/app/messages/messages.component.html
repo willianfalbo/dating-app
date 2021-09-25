@@ -25,7 +25,7 @@
         <th style="width: 20%">Sent / Received</th>
         <th style="width: 20%"></th>
       </tr>
-      <tr *ngFor="let message of messages" [routerLink]="['/members', 
+      <tr *ngFor="let message of messages" [routerLink]="['/members',
         messageContainer == 'Outbox' ? message.recipientId : message.senderId]"
         [queryParams]="{tab: 4}">
         <td>{{message.content}}</td>
@@ -51,10 +51,10 @@
 </div>
 
 <div class="d-flex justify-content-center">
-  <pagination [boundaryLinks]="true" 
+  <pagination [boundaryLinks]="true"
               [totalItems]="pagination.totalItems"
-              [itemsPerPage]="pagination.itemsPerPage"
-              [(ngModel)]="pagination.currentPage"
+              [itemsPerPage]="pagination.limit"
+              [(ngModel)]="pagination.page"
               (pageChanged)="pageChanged($event)"
             previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
 </pagination>

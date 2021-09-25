@@ -1,15 +1,17 @@
+import { Genders } from "../_shared/types/genders";
+
 export interface Message {
-    id: number;
-    senderId: number;
-    senderKnownAs: string;
-    senderPhotoUrl: string;
-    senderGender: string;
-    recipientId: number;
-    recipientKnownAs: string;
-    recipientPhotoUrl: string;
-    recipientGender: string;
-    content: string;
-    isRead: boolean;
-    dateRead: Date;
-    messageSent: Date;
+  id: number;
+  senderId: number;
+  senderKnownAs: string;
+  senderPhotoUrl: string;
+  senderGender: Genders;
+  recipientId: number;
+  recipientKnownAs: string;
+  recipientPhotoUrl: string;
+  recipientGender: Genders;
+  content: string;
+  isRead: boolean;
+  dateRead: Date;
+  messageSent: Date;
 }

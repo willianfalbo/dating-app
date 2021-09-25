@@ -4,8 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { UsersService } from '../_services/users.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { User } from '../_models/user';
-import { Pagination, PaginatedResult } from '../_models/pagination';
+import { Paginated, Pagination } from '../_models/pagination';
 import { AuthService } from '../_services/auth.service';
+import { Genders } from '../_shared/types/genders';
+
+type GenderOption = {
+  value: Genders;
+  display: string;
+};
 
 @Component({
   selector: 'app-members',
@@ -16,7 +22,7 @@ export class MembersComponent implements OnInit {
 
   users: User[];
   user: User;
-  genders: any[] = [
+  genders: GenderOption[] = [
     { value: 'male', display: 'Males' },
     { value: 'female', display: 'Females' },
     { value: 'unknown', display: 'Others' }
@@ -34,29 +40,29 @@ export class MembersComponent implements OnInit {
   ngOnInit() {
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
     this.route.data.subscribe(data => {
-      this.users = data['usersResolver'].result;
-      this.pagination = data['usersResolver'].pagination;
+      const { items, ...pagination } = data['usersResolver'] as Paginated<User>;
+      this.users = items;
+      this.pagination = pagination;
     });
     this.user = this.authService.currentUser;
     this.setDefaultFilters();
   }
 
   pageChanged(event: any): void {
-    this.pagination.currentPage = event.page;
+    this.pagination.page = event.page;
     this.loadUsers();
   }
 
   loadUsers() {
     this.userService
-      .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams)
-      .subscribe(
-        (res: PaginatedResult<User[]>) => {
-          this.users = res.result;
-          this.pagination = res.pagination;
-        }, error => {
-          this.alertify.error(error.error);
-        }
-      );
+      .getUsers(this.pagination.page, this.pagination.limit, this.userParams)
+      .subscribe(response => {
+        const { items, ...pagination } = response;
+        this.users = items;
+        this.pagination = pagination;
+      }, error => {
+        this.alertify.error(error.error);
+      });
   }
 
   private setDefaultFilters() {

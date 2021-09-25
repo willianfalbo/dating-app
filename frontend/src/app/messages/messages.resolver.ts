@@ -8,12 +8,13 @@ import { AlertifyService } from '../_services/alertify.service';
 import { MessagesService } from '../_services/messages.service';
 
 import { Message } from '../_models/message';
+import { Paginated } from '../_models/pagination';
 
 @Injectable()
-export class MessagesResolver implements Resolve<Message[]> {
+export class MessagesResolver implements Resolve<Paginated<Message>> {
 
-  pageNumber = 1;
-  pageSize = 5;
+  page = 1;
+  limit = 5;
   messageContainer = 'Unread';
 
   constructor(
@@ -22,8 +23,8 @@ export class MessagesResolver implements Resolve<Message[]> {
     private alertify: AlertifyService
   ) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Message[]> {
-    return this.messagesService.getMessages(this.pageNumber, this.pageSize, this.messageContainer)
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Paginated<Message>> {
+    return this.messagesService.getMessages(this.page, this.limit, this.messageContainer)
       .pipe(
         catchError(error => {
           this.alertify.error('Problem retrieving messages.');

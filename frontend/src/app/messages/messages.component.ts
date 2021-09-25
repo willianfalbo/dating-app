@@ -5,7 +5,7 @@ import { AlertifyService } from '../_services/alertify.service';
 import { MessagesService } from '../_services/messages.service';
 
 import { Message } from '../_models/message';
-import { Pagination, PaginatedResult } from '../_models/pagination';
+import { Pagination, Paginated } from '../_models/pagination';
 
 @Component({
   selector: 'app-messages',
@@ -27,22 +27,22 @@ export class MessagesComponent implements OnInit {
   ngOnInit() {
     // get data before activating the route. It can be used to avoid using safe navigators "?" in html page
     this.route.data.subscribe(data => {
-      this.messages = data['messagesResolver'].result;
-      this.pagination = data['messagesResolver'].pagination;
+      const { items, ...pagination } = data['messagesResolver'] as Paginated<Message>;
+      this.messages = items;
+      this.pagination = pagination;
     });
   }
 
   loadMessages() {
     this.messagesService
-      .getMessages(this.pagination.currentPage, this.pagination.itemsPerPage, this.messageContainer)
-      .subscribe(
-        (res: PaginatedResult<Message[]>) => {
-          this.messages = res.result;
-          this.pagination = res.pagination;
-        }, error => {
-          this.alertify.error(error.error);
-        }
-      );
+      .getMessages(this.pagination.page, this.pagination.limit, this.messageContainer)
+      .subscribe(result => {
+        const { items, ...pagination } = result;
+        this.messages = items;
+        this.pagination = pagination;
+      }, error => {
+        this.alertify.error(error.error);
+      });
   }
 
   deleteMessage(messageId: number) {
@@ -57,7 +57,7 @@ export class MessagesComponent implements OnInit {
   }
 
   pageChanged(event: any): void {
-    this.pagination.currentPage = event.page;
+    this.pagination.page = event.page;
     this.loadMessages();
   }
 

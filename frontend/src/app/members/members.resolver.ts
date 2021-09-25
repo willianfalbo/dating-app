@@ -6,12 +6,13 @@ import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Paginated } from '../_models/pagination';
 
 @Injectable()
-export class MembersResolver implements Resolve<User[]> {
+export class MembersResolver implements Resolve<Paginated<User>> {
 
-  pageNumber = 1;
-  pageSize = 5;
+  page = 1;
+  limit = 5;
   user: User;
   userParams: any = {};
 
@@ -22,11 +23,11 @@ export class MembersResolver implements Resolve<User[]> {
     private alertify: AlertifyService
   ) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User[]> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Paginated<User>> {
 
     this.setDefaultFilters();
 
-    return this.userService.getUsers(this.pageNumber, this.pageSize, this.userParams).pipe(
+    return this.userService.getUsers(this.page, this.limit, this.userParams).pipe(
       catchError(error => {
         this.alertify.error('Problem retrieving data.');
         this.router.navigate(['/home']);

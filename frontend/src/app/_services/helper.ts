@@ -1,9 +1,10 @@
 import { User } from "../_models/user";
+import { Genders } from "../_shared/types/genders";
 
 export class Helper {
-  static checkUserGender(gender: string): string {
-    if (gender) {
-      gender = gender.toLowerCase().trim();
+  static checkUserGender(value: string): Genders {
+    if (value) {
+      const gender = value.toLowerCase().trim() as Genders;
       if (gender === 'male' || gender === 'female' || gender === 'unknown') {
         return gender;
       } else {
@@ -19,14 +20,5 @@ export class Helper {
       photoUrl = `assets/gender/${this.checkUserGender(gender)}.png`;
     }
     return photoUrl;
-  }
-
-  static checkUserPhoto(user: User): User {
-    if (user) {
-      user.photoUrl = this.checkEmptyUserPhoto(user.photoUrl, user.gender);
-      return user;
-    } else {
-      return user;
-    }
   }
 }

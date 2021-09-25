@@ -27,8 +27,8 @@ export class MemberMessagesComponent implements OnInit {
 
   loadMessages() {
     this.messagesService.getMessagesThread(this.recipientId)
-      .subscribe(messages => {
-        this.messages = messages;
+      .subscribe(response => {
+        this.messages = response.items;
         // mark sender's messages as read
         this.messagesService.markSenderMessagesAsRead(this.recipientId)
           .subscribe(response => { }, error => {

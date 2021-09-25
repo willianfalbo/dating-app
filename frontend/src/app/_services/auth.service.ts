@@ -84,7 +84,10 @@ export class AuthService {
   }
 
   updateMember(user: User) {
-    user = Helper.checkUserPhoto(user);
+    user = {
+      ...user,
+      photoUrl: Helper.checkEmptyUserPhoto(user.photoUrl, user.gender),
+    }
     // change user's information in local storage
     this._currentUser = user;
     localStorage.setItem(USER_OBJECT_NAME, JSON.stringify(this._currentUser));

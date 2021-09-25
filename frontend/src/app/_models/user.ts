@@ -1,9 +1,10 @@
+import { Genders } from '../_shared/types/genders';
 import { Photo } from './photo';
 
 export class User {
   id: number;
   userName: string;
-  gender: string;
+  gender: Genders;
   age: number;
   knownAs: string;
   created: Date;
