@@ -38,6 +38,8 @@ A simplified version of an online dating application. It was created for demonst
   - RESTFul APIs
   - SQL Server database & EF Core
   - JWT authentication
+  - Slack Notifications
+  - Redis Cache
   - Swagger
 
 - Frontend
