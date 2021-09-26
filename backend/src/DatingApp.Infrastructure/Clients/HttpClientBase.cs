@@ -28,7 +28,7 @@ namespace DatingApp.Infrastructure.Clients
         )
         {
             _httpClient = new FlurlClient(baseUrl)
-                .Configure(c => c.Timeout = TimeSpan.FromSeconds(timeout * 1000));
+                .Configure(c => c.Timeout = TimeSpan.FromSeconds(timeout));
 
             if (defaultHeaders == null)
             {
